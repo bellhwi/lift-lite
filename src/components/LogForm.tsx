@@ -15,6 +15,7 @@ export default function LogForm() {
   const [lift, setLift] = useState(presetLifts[0])
   const [weight, setWeight] = useState('')
   const [note, setNote] = useState('')
+  const [maxReps, setMaxReps] = useState('')
 
   useEffect(() => {
     const savedName = localStorage.getItem('username')
@@ -34,13 +35,13 @@ export default function LogForm() {
       date: today,
       lift,
       weight: parseInt(weight),
+      maxReps: parseInt(maxReps) || null,
       note,
     }
 
     const key = `log-${today}-${lift}`
 
     localStorage.setItem(key, JSON.stringify(log))
-
     sessionStorage.setItem('justSaved', JSON.stringify({ lift }))
 
     router.push('/progress')
@@ -104,8 +105,16 @@ export default function LogForm() {
                 type='number'
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
-                className='w-28 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+                className='w-24 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
                 placeholder='lbs'
+              />
+
+              <input
+                type='number'
+                value={maxReps}
+                onChange={(e) => setMaxReps(e.target.value)}
+                className='w-24 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+                placeholder='reps'
               />
             </div>
           </div>

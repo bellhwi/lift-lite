@@ -3,6 +3,7 @@ export type WorkoutLog = {
   lift: string
   weight: number
   note?: string
+  maxReps?: number
 }
 
 export const getLogs = (): WorkoutLog[] => {

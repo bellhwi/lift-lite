@@ -7,6 +7,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  TooltipPayload,
   ResponsiveContainer,
 } from 'recharts'
 import { useRouter } from 'next/navigation'
@@ -79,8 +80,27 @@ export default function ExerciseChart({
               <XAxis dataKey='date' />
               <YAxis />
               <Tooltip
-                formatter={(value: number) => [`${value} lbs`, 'Weight']}
+                formatter={(
+                  value: number,
+                  name: string,
+                  item: TooltipPayload<number, string>
+                ) => {
+                  const date = item.payload?.date
+                  const entry = logs.find(
+                    (log) =>
+                      new Date(log.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                      }) === date && log.lift === liftName
+                  )
+
+                  return [
+                    `${value} lbs`,
+                    `Weight${entry?.maxReps ? ` — ${entry.maxReps} reps` : ''}`,
+                  ]
+                }}
               />
+
               <Line
                 type='monotone'
                 dataKey='weight'
@@ -118,8 +138,11 @@ export default function ExerciseChart({
                       {log.note?.trim() || 'no message'}
                     </span>
                     <span>
-                      <span className='font-medium'>{log.weight} lbs</span> —{' '}
-                      {formattedDate}
+                      <span className='font-medium'>
+                        {log.weight} lbs
+                        {log.maxReps ? ` × ${log.maxReps}` : ''}
+                      </span>
+                      — {formattedDate}
                     </span>
                   </div>
                 </div>
