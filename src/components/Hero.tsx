@@ -24,7 +24,9 @@ export function Hero() {
         nothing more.
       </p>
       <div className='mt-10 flex justify-center gap-x-6'>
-        <Button href='/log'>Try it free</Button>
+        <Button color='blue' href='/log'>
+          Try it free
+        </Button>
         <Button href='#how-it-works' variant='outline'>
           See how it works
         </Button>

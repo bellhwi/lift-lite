@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { Button } from '@/components/Button'
 
 export default function FeedbackWidget() {
   const [open, setOpen] = useState(false)
@@ -25,12 +26,12 @@ export default function FeedbackWidget() {
   return (
     <>
       {/* Floating Feedback Button */}
-      <button
+      <Button
         onClick={() => setOpen(true)}
-        className='fixed bottom-4 right-4 z-50 bg-black text-white px-4 py-2 rounded-full shadow hover:bg-gray-800'
+        className='fixed bottom-4 right-4 z-50 rounded-full'
       >
         💬 Feedback
-      </button>
+      </Button>
 
       {/* Slide-Up Box */}
       {open && (
@@ -67,12 +68,9 @@ export default function FeedbackWidget() {
                 className='w-full p-2 border rounded text-sm block'
               />
 
-              <button
-                type='submit'
-                className='w-full bg-black text-white py-1.5 rounded hover:bg-gray-800 text-sm'
-              >
+              <Button type='submit' className='w-full'>
                 Send Feedback
-              </button>
+              </Button>
             </form>
           )}
         </div>

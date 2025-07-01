@@ -12,6 +12,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { getLogs } from '@/lib/storage'
 import type { WorkoutLog } from '@/lib/storage'
+import { Button } from '@/components/Button'
 
 const allLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
 
@@ -55,6 +56,10 @@ export default function ExerciseChart({
     setData(filtered)
   }, [liftName, logs])
 
+  const filteredLogs = logs
+    .filter((log) => log.lift === liftName)
+    .sort((a, b) => b.date.localeCompare(a.date))
+
   return (
     <div className='w-full max-w-md mx-auto pb-8 space-y-6'>
       {/* Header with selector */}
@@ -84,34 +89,36 @@ export default function ExerciseChart({
               <XAxis dataKey='date' />
               <YAxis />
               <Tooltip
-                formatter={(
-                  value: number,
-                  _name: string,
-                  item: { payload?: { date: string } }
-                ) => {
-                  const date = item.payload?.date
-                  const entry = logs.find(
-                    (log) =>
-                      new Date(log.date).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      }) === date && log.lift === liftName
+                content={({ active, payload, label }) => {
+                  if (!active || !payload || !payload.length) return null
+
+                  const entry = payload[0].payload
+                  const formattedDate = new Date(label).toLocaleDateString(
+                    'en-US',
+                    {
+                      month: 'short',
+                      day: 'numeric',
+                    }
                   )
 
-                  return [
-                    `Weight: ${value} lbs${
-                      entry?.maxReps ? ` × ${entry.maxReps}` : ''
-                    }`,
-                    null,
-                  ]
+                  return (
+                    <div className='rounded bg-white px-3 py-2 shadow'>
+                      <p className='text-sm font-semibold text-blue-600'>
+                        {formattedDate}
+                      </p>
+                      <p className='text-sm text-gray-800'>
+                        Weight: {entry.weight} lbs
+                        {entry.maxReps ? ` × ${entry.maxReps}` : ''}
+                      </p>
+                    </div>
+                  )
                 }}
-                labelFormatter={() => ''}
               />
 
               <Line
                 type='monotone'
                 dataKey='weight'
-                stroke='#10b981'
+                stroke='#3f80ff'
                 strokeWidth={2}
               />
             </LineChart>
@@ -123,7 +130,7 @@ export default function ExerciseChart({
       {data.length > 0 && (
         <div className='space-y-3 text-sm'>
           <div className='flex justify-between items-center'>
-            <h3 className='font-semibold text-gray-800'>Workout Notes</h3>
+            <h3 className='font-semibold text-gray-800'>Notes</h3>
             <button
               onClick={() => {
                 setIsEditing((prev) => !prev)
@@ -135,146 +142,143 @@ export default function ExerciseChart({
             </button>
           </div>
 
-          {logs
-            .filter((log) => log.lift === liftName)
-            .sort((a, b) => b.date.localeCompare(a.date))
-            .map((log) => {
-              const formattedDate = new Date(log.date).toLocaleDateString(
-                'en-US',
-                {
-                  month: 'long',
-                  day: 'numeric',
-                }
-              )
+          {filteredLogs.map((log, index) => {
+            const formattedDate = new Date(log.date).toLocaleDateString(
+              'en-US',
+              {
+                month: 'long',
+                day: 'numeric',
+              }
+            )
 
-              const isCurrent =
-                editingLog?.date === log.date && editingLog?.lift === log.lift
+            const isCurrent =
+              editingLog?.date === log.date && editingLog?.lift === log.lift
 
-              return (
-                <div
-                  key={`${log.date}-${log.lift}`}
-                  className='border-b border-gray-300 pb-2 text-gray-700'
-                >
-                  {isCurrent ? (
-                    <div className='space-y-2'>
-                      <div className='flex gap-2'>
-                        <input
-                          type='number'
-                          value={editWeight}
-                          onChange={(e) => setEditWeight(e.target.value)}
-                          className='w-24 p-2 border border-gray-300 rounded'
-                          placeholder='lbs'
-                        />
-                        <input
-                          type='number'
-                          value={editReps}
-                          onChange={(e) => setEditReps(e.target.value)}
-                          className='w-24 p-2 border border-gray-300 rounded'
-                          placeholder='reps'
-                        />
-                      </div>
-                      <textarea
-                        value={editNote}
-                        onChange={(e) => setEditNote(e.target.value)}
-                        className='w-full p-2 border border-gray-300 rounded'
-                        placeholder='How did it feel?'
+            return (
+              <div
+                key={`${log.date}-${log.lift}`}
+                className={`pb-2 text-gray-700 ${
+                  index !== filteredLogs.length - 1
+                    ? 'border-b border-gray-300'
+                    : ''
+                }`}
+              >
+                {isCurrent ? (
+                  <div className='space-y-2'>
+                    <div className='flex gap-2'>
+                      <input
+                        type='number'
+                        value={editWeight}
+                        onChange={(e) => setEditWeight(e.target.value)}
+                        className='w-24 p-2 border border-gray-300 rounded'
+                        placeholder='lbs'
                       />
-                      <div className='flex justify-end gap-2'>
-                        <button
-                          onClick={() => setEditingLog(null)}
-                          className='text-gray-500'
-                        >
-                          Cancel
-                        </button>
+                      <input
+                        type='number'
+                        value={editReps}
+                        onChange={(e) => setEditReps(e.target.value)}
+                        className='w-24 p-2 border border-gray-300 rounded'
+                        placeholder='reps'
+                      />
+                    </div>
+                    <textarea
+                      value={editNote}
+                      onChange={(e) => setEditNote(e.target.value)}
+                      className='w-full p-2 border border-gray-300 rounded'
+                      placeholder='How did it feel?'
+                    />
+                    <div className='flex justify-end gap-2'>
+                      <button
+                        onClick={() => setEditingLog(null)}
+                        className='text-gray-500'
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => {
+                          const updated = {
+                            ...log,
+                            note: editNote,
+                            weight: parseInt(editWeight),
+                            maxReps: editReps ? parseInt(editReps) : undefined,
+                          }
+                          const key = `log-${log.date}-${log.lift}`
+                          localStorage.setItem(key, JSON.stringify(updated))
+                          setLogs((prev) =>
+                            prev.map((l) =>
+                              l.date === log.date && l.lift === log.lift
+                                ? updated
+                                : l
+                            )
+                          )
+                          setEditingLog(null)
+                          setIsEditing(false)
+                        }}
+                        className='text-blue-600 font-semibold'
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className='flex justify-between items-start'>
+                    <div className='w-full flex justify-between items-start'>
+                      <span className='italic text-gray-600'>
+                        {log.note?.trim() || 'no message'}
+                      </span>
+                      <div className='text-sm text-gray-500'>
+                        {log.weight} lbs {log.maxReps ? `× ${log.maxReps}` : ''}{' '}
+                        — {formattedDate}
+                      </div>
+                    </div>
+                    {isEditing && (
+                      <div className='flex gap-3 text-sm text-blue-600 text-right ml-4'>
                         <button
                           onClick={() => {
-                            const updated = {
-                              ...log,
-                              note: editNote,
-                              weight: parseInt(editWeight),
-                              maxReps: editReps
-                                ? parseInt(editReps)
-                                : undefined,
-                            }
+                            setEditingLog(log)
+                            setEditNote(log.note || '')
+                            setEditWeight(log.weight.toString())
+                            setEditReps(log.maxReps?.toString() || '')
+                          }}
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            if (!confirm('Are you sure delete this log?'))
+                              return
                             const key = `log-${log.date}-${log.lift}`
-                            localStorage.setItem(key, JSON.stringify(updated))
+                            localStorage.removeItem(key)
                             setLogs((prev) =>
-                              prev.map((l) =>
-                                l.date === log.date && l.lift === log.lift
-                                  ? updated
-                                  : l
+                              prev.filter(
+                                (l) =>
+                                  !(l.date === log.date && l.lift === log.lift)
                               )
                             )
-                            setEditingLog(null)
-                            setIsEditing(false)
                           }}
-                          className='text-blue-600 font-semibold'
+                          className='text-red-600'
                         >
-                          Save
+                          Delete
                         </button>
                       </div>
-                    </div>
-                  ) : (
-                    <div className='flex justify-between items-start'>
-                      <div className='w-full flex justify-between items-start'>
-                        <span className='italic text-gray-600'>
-                          {log.note?.trim() || 'no message'}
-                        </span>
-                        <div className='text-sm text-gray-500'>
-                          {log.weight} lbs{' '}
-                          {log.maxReps ? `× ${log.maxReps}` : ''} —{' '}
-                          {formattedDate}
-                        </div>
-                      </div>
-                      {isEditing && (
-                        <div className='flex gap-3 text-sm text-blue-600 text-right ml-4'>
-                          <button
-                            onClick={() => {
-                              setEditingLog(log)
-                              setEditNote(log.note || '')
-                              setEditWeight(log.weight.toString())
-                              setEditReps(log.maxReps?.toString() || '')
-                            }}
-                          >
-                            Edit
-                          </button>
-
-                          <button
-                            onClick={() => {
-                              if (!confirm('Are you sure delete this log?'))
-                                return
-                              const key = `log-${log.date}-${log.lift}`
-                              localStorage.removeItem(key)
-                              setLogs((prev) =>
-                                prev.filter(
-                                  (l) =>
-                                    !(
-                                      l.date === log.date && l.lift === log.lift
-                                    )
-                                )
-                              )
-                            }}
-                            className='text-red-600'
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
+                    )}
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       )}
 
       {/* Button */}
-      <button
+      <Button
         onClick={() => router.push('/log')}
-        className='w-full bg-black text-white py-3 rounded font-medium hover:bg-gray-900 mt-4'
+        className='w-full'
+        color='blue'
       >
         Log New Workout
-      </button>
+      </Button>
     </div>
   )
 }

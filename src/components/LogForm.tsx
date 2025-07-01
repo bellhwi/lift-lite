@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/Button'
 
 const presetLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
 
@@ -31,18 +32,38 @@ export default function LogForm() {
       return
     }
 
+    const currentWeight = parseInt(weight)
     const log = {
       date: today,
       lift,
-      weight: parseInt(weight),
+      weight: currentWeight,
       maxReps: parseInt(maxReps) || null,
       note,
     }
 
     const key = `log-${today}-${lift}`
-
     localStorage.setItem(key, JSON.stringify(log))
-    sessionStorage.setItem('justSaved', JSON.stringify({ lift }))
+
+    // Analyze all previous logs for this lift
+    let isFirst = true
+    let isPR = true
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i)
+      if (k?.startsWith('log-') && k.includes(lift) && k !== key) {
+        try {
+          const pastLog = JSON.parse(localStorage.getItem(k) || '{}')
+          if (pastLog.lift === lift) {
+            isFirst = false
+            if (pastLog.weight >= currentWeight) {
+              isPR = false
+            }
+          }
+        } catch {}
+      }
+    }
+
+    sessionStorage.setItem('justSaved', JSON.stringify({ lift, isFirst, isPR }))
 
     router.push('/progress')
   }
@@ -129,18 +150,16 @@ export default function LogForm() {
           </div>
 
           <div className='flex gap-2 pt-2'>
-            <button
-              onClick={handleSave}
-              className='w-full bg-black text-white py-3 rounded font-medium hover:bg-gray-900'
-            >
+            <Button onClick={handleSave} color='blue' className='w-full'>
               Save Workout
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => router.push('/progress')}
-              className='w-full border border-black text-black py-3 rounded font-medium hover:bg-gray-100'
+              variant='outline'
+              className='w-full'
             >
               See Progress
-            </button>
+            </Button>
           </div>
         </>
       )}
