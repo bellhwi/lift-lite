@@ -86,12 +86,8 @@ export default function ExerciseChart({
               <Tooltip
                 formatter={(
                   value: number,
-                  name: string,
-                  item: {
-                    payload?: {
-                      date: string
-                    }
-                  }
+                  _name: string,
+                  item: { payload?: { date: string } }
                 ) => {
                   const date = item.payload?.date
                   const entry = logs.find(
@@ -103,10 +99,13 @@ export default function ExerciseChart({
                   )
 
                   return [
-                    `${value} lbs`,
-                    `Weight${entry?.maxReps ? ` — ${entry.maxReps} reps` : ''}`,
+                    `Weight: ${value} lbs${
+                      entry?.maxReps ? ` × ${entry.maxReps}` : ''
+                    }`,
+                    null,
                   ]
                 }}
+                labelFormatter={() => ''}
               />
 
               <Line
@@ -271,7 +270,7 @@ export default function ExerciseChart({
 
       {/* Button */}
       <button
-        onClick={() => router.push('/')}
+        onClick={() => router.push('/log')}
         className='w-full bg-black text-white py-3 rounded font-medium hover:bg-gray-900 mt-4'
       >
         Log New Workout

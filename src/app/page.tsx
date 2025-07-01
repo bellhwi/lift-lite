@@ -1,11 +1,25 @@
-import LogForm from '@/components/LogForm'
+import { CallToAction } from '@/components/CallToAction'
+import { Faqs } from '@/components/Faqs'
+import { Footer } from '@/components/Footer'
+import { Header } from '@/components/Header'
+import { Hero } from '@/components/Hero'
+import { Pricing } from '@/components/Pricing'
+import { PrimaryFeatures } from '@/components/PrimaryFeatures'
+import { SecondaryFeatures } from '@/components/SecondaryFeatures'
 
 export default function Home() {
   return (
-    <main className='min-h-screen bg-white px-4 py-6'>
-      <div className='max-w-md mx-auto'>
-        <LogForm />
-      </div>
-    </main>
+    <>
+      <Header />
+      <main>
+        <Hero />
+        <PrimaryFeatures />
+        <SecondaryFeatures />
+        <CallToAction />
+        <Pricing />
+        <Faqs />
+      </main>
+      <Footer />
+    </>
   )
 }

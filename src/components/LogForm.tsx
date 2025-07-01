@@ -81,18 +81,15 @@ export default function LogForm() {
           <p className='text-center text-gray-700 text-lg'>
             Welcome, <span className='font-semibold'>{userName}</span> 👋
           </p>
-          <p className='text-center text-gray-500 text-sm mt-1'>
-            Pick your workout, enter the weight, and log it below.
-          </p>
           <div className='space-y-2'>
             <label className='block text-sm font-medium text-gray-700'>
-              Workout & Weight
+              Workout
             </label>
-            <div className='flex gap-2'>
+            <div className='flex flex-wrap gap-2'>
               <select
                 value={lift}
                 onChange={(e) => setLift(e.target.value)}
-                className='flex-1 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+                className='flex-[2] min-w-0 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
               >
                 {presetLifts.map((l) => (
                   <option key={l} value={l}>
@@ -105,7 +102,7 @@ export default function LogForm() {
                 type='number'
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
-                className='w-24 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+                className='flex-1 min-w-0 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
                 placeholder='lbs'
               />
 
@@ -113,7 +110,7 @@ export default function LogForm() {
                 type='number'
                 value={maxReps}
                 onChange={(e) => setMaxReps(e.target.value)}
-                className='w-24 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+                className='flex-1 min-w-0 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
                 placeholder='reps'
               />
             </div>
@@ -121,10 +118,10 @@ export default function LogForm() {
 
           <div>
             <label className='block text-sm font-medium text-gray-700 mb-1'>
-              Daily Note
+              Note
             </label>
             <input
-              placeholder='How’d it feel today?'
+              placeholder='How did it feel?'
               value={note}
               onChange={(e) => setNote(e.target.value)}
               className='w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'

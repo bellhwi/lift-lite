@@ -3,16 +3,35 @@ import type { Metadata } from 'next'
 import { ReactNode } from 'react'
 import FeedbackWidget from '@/components/FeedbackWidget'
 import Script from 'next/script'
+import { Inter, Lexend } from 'next/font/google'
+import clsx from 'clsx'
 
 export const metadata: Metadata = {
   title: 'LiftLite',
   description:
     'LiftLite is a minimal workout tracker that lets you log daily lifts, track your progress with simple charts, and stay consistent. No sign-up required.',
 }
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
+const lexend = Lexend({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-lexend',
+})
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en'>
+    <html
+      lang='en'
+      className={clsx(
+        'h-full scroll-smooth bg-white antialiased',
+        inter.variable,
+        lexend.variable
+      )}
+    >
       <head>
         {/* GTM HEAD SCRIPT */}
         <Script
@@ -28,8 +47,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             `,
           }}
         />
+        <link
+          rel='stylesheet'
+          href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap'
+        />
       </head>
-      <body>
+      <body className='flex h-full flex-col'>
         <noscript>
           <iframe
             src='https://www.googletagmanager.com/ns.html?id=GTM-5S4ZJML8'

@@ -60,17 +60,13 @@ export default function FeedbackWidget() {
                 placeholder='Type your feedback here…'
                 className='w-full h-24 p-2 border rounded resize-none text-sm'
               />
-              <div>
-                <label className='text-sm text-gray-600 block'>
-                  Email (optional)
-                </label>
-                <input
-                  type='email'
-                  name='email'
-                  placeholder='Leave it if you want a reply.'
-                  className='w-full p-2 border rounded text-sm block mt-2'
-                />
-              </div>
+              <input
+                type='email'
+                name='email'
+                placeholder='Email'
+                className='w-full p-2 border rounded text-sm block'
+              />
+
               <button
                 type='submit'
                 className='w-full bg-black text-white py-1.5 rounded hover:bg-gray-800 text-sm'
