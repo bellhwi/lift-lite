@@ -129,13 +129,13 @@ export function PrimaryFeatures() {
                         {feature.description}
                       </p>
                     </div>
-                    <div className='mt-10 w-180 overflow-hidden rounded-xl bg-white shadow-xl shadow-blue-900/20 sm:w-auto lg:mt-0 lg:w-271.25'>
+                    <div className='mt-10 mx-auto w-full max-w-[20rem] sm:mx-0 sm:max-w-none sm:w-auto overflow-hidden rounded-xl bg-white shadow-xl shadow-blue-900/20 lg:mt-0 lg:max-w-[67.8125rem]'>
                       <Image
                         className='w-full'
                         src={feature.image}
                         alt=''
                         priority
-                        sizes='(min-width: 1024px) 67.8125rem, (min-width: 640px) 100vw, 45rem'
+                        sizes='(min-width: 1024px) 67.8125rem, (min-width: 640px) 100vw, 100vw'
                       />
                     </div>
                   </TabPanel>
