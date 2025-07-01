@@ -96,17 +96,6 @@ function FeaturesMobile() {
       {features.map((feature) => (
         <div key={feature.summary}>
           <Feature feature={feature} className='mx-auto max-w-2xl' isActive />
-          {/* <div className='relative mt-10 pb-10'>
-            <div className='absolute -inset-x-4 top-8 bottom-0 bg-slate-200 sm:-inset-x-6' />
-            <div className='relative mx-auto w-211 overflow-hidden rounded-xl bg-white shadow-lg ring-1 shadow-slate-900/5 ring-slate-500/10'>
-              <Image
-                className='w-full'
-                src={feature.image}
-                alt=''
-                sizes='52.75rem'
-              />
-            </div>
-          </div> */}
         </div>
       ))}
     </div>
@@ -136,32 +125,6 @@ function FeaturesDesktop() {
               />
             ))}
           </TabList>
-          {/* <TabPanels className='relative mt-20 overflow-hidden rounded-4xl bg-slate-200 px-14 py-16 xl:px-16'>
-            <div className='-mx-5 flex'>
-              {features.map((feature, featureIndex) => (
-                <TabPanel
-                  static
-                  key={feature.summary}
-                  className={clsx(
-                    'px-5 transition duration-500 ease-in-out data-selected:not-data-focus:outline-hidden',
-                    featureIndex !== selectedIndex && 'opacity-60'
-                  )}
-                  style={{ transform: `translateX(-${selectedIndex * 100}%)` }}
-                  aria-hidden={featureIndex !== selectedIndex}
-                >
-                  <div className='w-211 overflow-hidden rounded-xl bg-white shadow-lg ring-1 shadow-slate-900/5 ring-slate-500/10'>
-                    <Image
-                      className='w-full'
-                      src={feature.image}
-                      alt=''
-                      sizes='52.75rem'
-                    />
-                  </div>
-                </TabPanel>
-              ))}
-            </div>
-            <div className='pointer-events-none absolute inset-0 rounded-4xl ring-1 ring-slate-900/10 ring-inset' />
-          </TabPanels> */}
         </>
       )}
     </TabGroup>
