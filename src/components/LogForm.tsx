@@ -90,12 +90,9 @@ export default function LogForm() {
             className='w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
             placeholder="What's your name?"
           />
-          <button
-            onClick={handleNameSubmit}
-            className='w-full bg-black text-white py-3 rounded font-medium hover:bg-gray-900'
-          >
+          <Button onClick={handleNameSubmit} className='w-full' color='blue'>
             Let’s Get Started
-          </button>
+          </Button>
         </>
       ) : (
         <>
