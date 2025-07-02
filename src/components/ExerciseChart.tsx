@@ -51,14 +51,14 @@ export default function ExerciseChart({
         }),
         weight: log.weight,
       }))
-      .sort((a, b) => a.date.localeCompare(b.date))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
     setData(filtered)
   }, [liftName, logs])
 
   const filteredLogs = logs
     .filter((log) => log.lift === liftName)
-    .sort((a, b) => b.date.localeCompare(a.date))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
     <div className='w-full max-w-md mx-auto pb-8 space-y-6'>
