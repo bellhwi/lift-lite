@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LiftLite
 
-## Getting Started
+**Track less. Lift more.**\
+LiftLite is a minimalist workout tracker designed for people who want to log their best sets quickly, without distractions.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Log your workout in seconds
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- View clear progress graphs over time
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Data saved locally in your browser
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- No login or signup required
 
-## Learn More
+- Works on desktop, tablet, and phone
 
-To learn more about Next.js, take a look at the following resources:
+## How It Works
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1.  Open LiftLite in your browser
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2.  Choose a lift and enter your best set
 
-## Deploy on Vercel
+3.  See your progress visualized automatically
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Built with Next.js and TypeScript
+
+- Recharts for lightweight graphing
+
+- LocalStorage for persistence (no backend)
+
+## Why LiftLite?
+
+Most fitness apps are bloated with features you don't need. LiftLite focuses on speed, simplicity, and clarity–helping you stay consistent without slowing you down.
+
+## Live Demo
+
+[Try LiftLite](https://lift-lite.vercel.app)
