@@ -98,6 +98,7 @@ export function Header() {
             </div>
           </div>
           <div className='flex items-center gap-x-5 md:gap-x-8'>
+            <NavLink href='/signin'>Sign in</NavLink>
             <Button href='/log' color='blue'>
               <span>Start logging</span>
             </Button>

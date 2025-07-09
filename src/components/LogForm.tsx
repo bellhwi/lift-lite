@@ -24,6 +24,25 @@ export default function LogForm() {
       setUserName(savedName)
       setHasName(true)
     }
+
+    const justLoggedIn = sessionStorage.getItem('justLoggedIn')
+    if (justLoggedIn) {
+      const confirmed = confirm(
+        'Would you like to sync your name and previous workout logs to your account?'
+      )
+
+      if (confirmed) {
+        // Dynamically import both sync functions
+        Promise.all([
+          import('@/lib/syncProfile').then((m) => m.syncUserProfile()),
+          import('@/lib/sync').then((m) => m.syncLocalLogsToSupabase()),
+        ]).then(() => {
+          console.log('✅ Synced profile and workouts')
+        })
+      }
+
+      sessionStorage.removeItem('justLoggedIn')
+    }
   }, [])
 
   const handleSave = () => {
@@ -96,9 +115,6 @@ export default function LogForm() {
         </>
       ) : (
         <>
-          <p className='text-center text-gray-700 text-lg'>
-            Welcome, <span className='font-semibold'>{userName}</span> 👋
-          </p>
           <div className='space-y-2'>
             <label className='block text-sm font-medium text-gray-700'>
               Workout
