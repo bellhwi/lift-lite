@@ -1,16 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useUserName } from '@/hooks/useUserName'
+import { useWorkoutLogs } from '@/hooks/useWorkoutLogs'
 import ExerciseChart from '@/components/ExerciseChart'
 
 export default function ProgressPage() {
+  const { logs: initialLogs, loading } = useWorkoutLogs()
+  const [logs, setLogs] = useState(initialLogs)
+  const userName = useUserName()
   const [toast, setToast] = useState<string | null>(null)
   const [justSavedLift, setJustSavedLift] = useState<string | null>(null)
 
   useEffect(() => {
-    const userName = localStorage.getItem('username') ?? 'You'
+    setLogs(initialLogs)
+  }, [initialLogs])
 
+  useEffect(() => {
     const saved = sessionStorage.getItem('justSaved')
+
     if (saved) {
       try {
         const parsed: { lift: string; isFirst?: boolean; isPR?: boolean } =
@@ -24,16 +32,18 @@ export default function ProgressPage() {
         } else if (parsed.isPR) {
           setToast(`🔥 You crushed it, ${userName}! New ${parsed.lift} record!`)
         } else {
-          setToast(`✓ ${parsed.lift} saved! Keep it going, ${userName}! `)
+          setToast(`✓ ${parsed.lift} saved! Keep it going, ${userName}!`)
         }
+
+        // ✅ 단순하게 여기서 바로 실행
+        setTimeout(() => setToast(null), 3000)
       } catch {
         setJustSavedLift(null)
       } finally {
         sessionStorage.removeItem('justSaved')
-        setTimeout(() => setToast(null), 3000)
       }
     }
-  }, [])
+  }, [userName])
 
   return (
     <main className='relative min-h-screen px-4 py-6'>
@@ -45,7 +55,15 @@ export default function ProgressPage() {
 
       <div className='max-w-md mx-auto space-y-6'>
         <h1 className='text-2xl font-bold text-gray-900'>Your Progress</h1>
-        <ExerciseChart defaultLift={justSavedLift} />
+        {loading ? (
+          <p className='text-center text-gray-500'>Loading your progress...</p>
+        ) : (
+          <ExerciseChart
+            defaultLift={justSavedLift}
+            logs={logs}
+            setLogs={setLogs}
+          />
+        )}
       </div>
     </main>
   )

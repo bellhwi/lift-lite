@@ -10,21 +10,29 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { useRouter } from 'next/navigation'
-import { getLogs } from '@/lib/storage'
 import type { WorkoutLog } from '@/lib/storage'
 import { Button } from '@/components/Button'
+import { useUser } from '@/hooks/useUser'
+import { supabase } from '@/lib/supabase'
 
 const allLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
 
 export default function ExerciseChart({
   defaultLift,
+  logs,
+  setLogs,
 }: {
   defaultLift: string | null
+  logs: WorkoutLog[]
+  setLogs: React.Dispatch<React.SetStateAction<WorkoutLog[]>>
 }) {
+  const user = useUser()
+
   const router = useRouter()
-  const [logs, setLogs] = useState<WorkoutLog[]>([])
-  const [liftName, setLiftName] = useState<string | null>(null)
-  const [data, setData] = useState<{ date: string; weight: number }[]>([])
+  const [liftName, setLiftName] = useState<string>('Deadlift')
+  const [data, setData] = useState<
+    { date: string; weight: number; maxReps?: number }[]
+  >([])
   const [isEditing, setIsEditing] = useState(false)
   const [editingLog, setEditingLog] = useState<WorkoutLog | null>(null)
   const [editNote, setEditNote] = useState('')
@@ -32,15 +40,12 @@ export default function ExerciseChart({
   const [editReps, setEditReps] = useState('')
 
   useEffect(() => {
-    const logs = getLogs()
-    setLogs(logs)
-
     const fallbackLift = logs[0]?.lift || 'Deadlift'
     setLiftName(defaultLift || fallbackLift)
-  }, [defaultLift])
+  }, [defaultLift, logs])
 
   useEffect(() => {
-    if (!liftName || logs.length === 0) return
+    if (!liftName) return
 
     const filtered = logs
       .filter((log) => log.lift === liftName)
@@ -50,6 +55,7 @@ export default function ExerciseChart({
           day: 'numeric',
         }),
         weight: log.weight,
+        maxReps: log.maxReps,
       }))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
@@ -62,10 +68,10 @@ export default function ExerciseChart({
 
   return (
     <div className='w-full max-w-md mx-auto pb-8 space-y-6'>
-      {/* Header with selector */}
+      {/* Lift selector */}
       <div>
         <select
-          value={liftName || ''}
+          value={liftName}
           onChange={(e) => setLiftName(e.target.value)}
           className='text-xl font-bold text-gray-900 border-b border-gray-400 p-1 bg-transparent focus:outline-none'
         >
@@ -91,20 +97,11 @@ export default function ExerciseChart({
               <Tooltip
                 content={({ active, payload, label }) => {
                   if (!active || !payload || !payload.length) return null
-
                   const entry = payload[0].payload
-                  const formattedDate = new Date(label).toLocaleDateString(
-                    'en-US',
-                    {
-                      month: 'short',
-                      day: 'numeric',
-                    }
-                  )
-
                   return (
                     <div className='rounded bg-white px-3 py-2 shadow'>
                       <p className='text-sm font-semibold text-blue-600'>
-                        {formattedDate}
+                        {label}
                       </p>
                       <p className='text-sm text-gray-800'>
                         Weight: {entry.weight} lbs
@@ -114,7 +111,6 @@ export default function ExerciseChart({
                   )
                 }}
               />
-
               <Line
                 type='monotone'
                 dataKey='weight'
@@ -126,7 +122,7 @@ export default function ExerciseChart({
         </div>
       )}
 
-      {/* Notes */}
+      {/* Notes & Edit */}
       {data.length > 0 && (
         <div className='space-y-3 text-sm'>
           <div className='flex justify-between items-center'>
@@ -156,7 +152,7 @@ export default function ExerciseChart({
 
             return (
               <div
-                key={`${log.date}-${log.lift}`}
+                key={`${log.date}-${log.lift}-${index}`}
                 className={`pb-2 text-gray-700 ${
                   index !== filteredLogs.length - 1
                     ? 'border-b border-gray-300'
@@ -195,24 +191,35 @@ export default function ExerciseChart({
                         Cancel
                       </button>
                       <button
-                        onClick={() => {
+                        onClick={async () => {
                           const updated = {
                             ...log,
                             note: editNote,
                             weight: parseInt(editWeight),
                             maxReps: editReps ? parseInt(editReps) : undefined,
                           }
-                          const key = `log-${log.date}-${log.lift}`
-                          localStorage.setItem(key, JSON.stringify(updated))
-                          setLogs((prev) =>
-                            prev.map((l) =>
-                              l.date === log.date && l.lift === log.lift
-                                ? updated
-                                : l
+
+                          if (user) {
+                            // ✅ 로그인 상태 → Supabase 업데이트
+                            await supabase
+                              .from('workouts')
+                              .update(updated)
+                              .eq('user_id', user.id)
+                              .eq('date', log.date)
+                              .eq('lift', log.lift)
+
+                            setLogs((prev) =>
+                              prev.map((l) =>
+                                l.date === log.date && l.lift === log.lift
+                                  ? updated
+                                  : l
+                              )
                             )
-                          )
-                          setEditingLog(null)
-                          setIsEditing(false)
+                          } else {
+                            // ✅ 비로그인 상태 → localStorage
+                            const key = `log-${log.date}-${log.lift}`
+                            localStorage.setItem(key, JSON.stringify(updated))
+                          }
                         }}
                         className='text-blue-600 font-semibold'
                       >
@@ -227,8 +234,9 @@ export default function ExerciseChart({
                         {log.note?.trim() || 'no message'}
                       </span>
                       <div className='text-sm text-gray-500'>
-                        {log.weight} lbs {log.maxReps ? `× ${log.maxReps}` : ''}{' '}
-                        — {formattedDate}
+                        {log.weight} lbs
+                        {log.maxReps ? ` × ${log.maxReps}` : ''} —{' '}
+                        {formattedDate}
                       </div>
                     </div>
                     {isEditing && (
@@ -243,19 +251,31 @@ export default function ExerciseChart({
                         >
                           Edit
                         </button>
-
                         <button
-                          onClick={() => {
+                          onClick={async () => {
                             if (!confirm('Are you sure delete this log?'))
                               return
-                            const key = `log-${log.date}-${log.lift}`
-                            localStorage.removeItem(key)
-                            setLogs((prev) =>
-                              prev.filter(
-                                (l) =>
-                                  !(l.date === log.date && l.lift === log.lift)
+
+                            if (user) {
+                              // ✅ 로그인 상태 → Supabase 삭제
+                              await supabase
+                                .from('workouts')
+                                .delete()
+                                .eq('user_id', user.id)
+
+                              setLogs((prev) =>
+                                prev.filter(
+                                  (l) =>
+                                    !(
+                                      l.date === log.date && l.lift === log.lift
+                                    )
+                                )
                               )
-                            )
+                            } else {
+                              // ✅ 비로그인 상태 → localStorage
+                              const key = `log-${log.date}-${log.lift}`
+                              localStorage.removeItem(key)
+                            }
                           }}
                           className='text-red-600'
                         >
