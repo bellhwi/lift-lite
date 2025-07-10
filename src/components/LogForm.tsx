@@ -33,7 +33,6 @@ export default function LogForm() {
           import('@/lib/syncProfile').then((m) => m.syncUserProfile()),
           import('@/lib/sync').then((m) => m.syncLocalLogsToSupabase()),
         ]).then(() => {
-          console.log('✅ Synced profile and workouts')
           localStorage.setItem('hasSyncedBefore', 'true') // ✅ 최초 동기화 체크
         })
       }
@@ -60,15 +59,23 @@ export default function LogForm() {
     const key = `log-${today}-${lift}`
 
     if (user) {
-      // 로그인 상태 → Supabase 저장
-      await supabase.from('workouts').insert([
-        {
-          ...log,
-          user_id: user.id,
-        },
-      ])
+      // 로그인 상태 → Supabase upsert (insert or update)
+      await supabase
+        .from('workouts')
+        .upsert(
+          [
+            {
+              ...log,
+              user_id: user.id,
+            },
+          ],
+          {
+            onConflict: 'user_id,date,lift', // ✅ comma-separated string
+          }
+        )
+        .select()
     } else {
-      // 비로그인 상태 → localStorage 저장
+      // 비로그인 상태 → localStorage 저장 (덮어쓰기)
       localStorage.setItem(key, JSON.stringify(log))
     }
 
