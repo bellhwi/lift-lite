@@ -220,6 +220,8 @@ export default function ExerciseChart({
                             const key = `log-${log.date}-${log.lift}`
                             localStorage.setItem(key, JSON.stringify(updated))
                           }
+
+                          setEditingLog(null)
                         }}
                         className='text-blue-600 font-semibold'
                       >
