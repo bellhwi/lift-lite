@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/Button'
 import { useUser } from '@/hooks/useUser'
+import { useUserName } from '@/hooks/useUserName'
 import { supabase } from '@/lib/supabase'
 
 const presetLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
@@ -11,6 +12,7 @@ const presetLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
 export default function LogForm() {
   const router = useRouter()
   const user = useUser()
+  const userName = useUserName()
   const today = new Date().toLocaleDateString('en-CA') // e.g., "2025-06-19"
   const [lift, setLift] = useState(presetLifts[0])
   const [weight, setWeight] = useState('')
@@ -96,7 +98,15 @@ export default function LogForm() {
 
   return (
     <div className='max-w-md mx-auto px-4 py-8 space-y-6 bg-white'>
-      <h1 className='text-3xl font-bold text-center text-gray-900'>LiftLite</h1>
+      <h1
+        className='text-3xl font-bold text-center text-gray-900 cursor-default'
+        onClick={() => router.push('/')}
+      >
+        LiftLite
+      </h1>
+      <p className='text-center text-xl text-gray-700'>
+        Welcome, {userName} 👋
+      </p>
 
       <div className='space-y-2'>
         <label className='block text-sm font-medium text-gray-700'>

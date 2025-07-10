@@ -31,7 +31,7 @@ export default function UserBadge() {
               className='w-8 h-8 rounded-full'
             />
           )}
-          <span className='text-sm text-gray-700'>Welcome, {firstName}!</span>
+          <span className='text-sm text-gray-700'>{firstName}</span>
           <button
             onClick={handleLogout}
             className='text-xs text-gray-400 hover:underline'
