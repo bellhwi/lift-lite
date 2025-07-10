@@ -262,7 +262,7 @@ export default function ExerciseChart({
                                 .from('workouts')
                                 .delete()
                                 .eq('user_id', user.id)
-
+                                .eq('date', new Date(log.date).toISOString())
                               setLogs((prev) =>
                                 prev.filter(
                                   (l) =>
