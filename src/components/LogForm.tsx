@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/Button'
 import { useUser } from '@/hooks/useUser'
 import { useUserName } from '@/hooks/useUserName'
+import { useUserPlan } from '@/hooks/useUserPlan'
+import { useCustomLifts } from '@/hooks/useCustomLifts'
 import { supabase } from '@/lib/supabase'
 
 const presetLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
@@ -13,11 +15,16 @@ export default function LogForm() {
   const router = useRouter()
   const user = useUser()
   const userName = useUserName()
+  const userPlan = useUserPlan()
   const today = new Date().toLocaleDateString('en-CA') // e.g., "2025-06-19"
   const [lift, setLift] = useState(presetLifts[0])
   const [weight, setWeight] = useState('')
   const [note, setNote] = useState('')
   const [maxReps, setMaxReps] = useState('')
+  const { customLifts, setCustomLifts } = useCustomLifts()
+  const [showCustomInput, setShowCustomInput] = useState(false)
+  const [newLift, setNewLift] = useState('')
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   useEffect(() => {
     const justLoggedIn = sessionStorage.getItem('justLoggedIn')
@@ -103,6 +110,26 @@ export default function LogForm() {
     router.push('/progress')
   }
 
+  async function handleAddCustomLift() {
+    if (!user || !newLift.trim()) return
+
+    const { error } = await supabase.from('custom_exercises').insert([
+      {
+        user_id: user.id,
+        name: newLift.trim(),
+      },
+    ])
+
+    if (!error) {
+      setCustomLifts((prev) => [...prev, newLift.trim()])
+      setNewLift('')
+      setShowCustomInput(false)
+      setLift(newLift.trim())
+    } else {
+      console.error('Failed to add custom lift:', error.message)
+    }
+  }
+
   return (
     <div className='max-w-md mx-auto px-4 py-8 space-y-6 bg-white'>
       <h1
@@ -115,23 +142,59 @@ export default function LogForm() {
         Welcome, {userName} 👋
       </p>
 
-      <div className='space-y-2'>
-        <label className='block text-sm font-medium text-gray-700'>
+      <div>
+        <label className='mb-2 block text-sm font-medium text-gray-700'>
           Workout
         </label>
         <div className='flex flex-wrap gap-2'>
-          <select
-            value={lift}
-            onChange={(e) => setLift(e.target.value)}
-            className='flex-[2] min-w-0 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
-          >
-            {presetLifts.map((l) => (
-              <option key={l} value={l}>
-                {l}
-              </option>
-            ))}
-          </select>
+          {/* Workout dropdown + add custom text */}
+          <div className='flex flex-col flex-[2] min-w-0'>
+            <select
+              value={lift}
+              onChange={(e) => setLift(e.target.value)}
+              className='border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+            >
+              {presetLifts.map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+              {customLifts.map((l) => (
+                <option key={l} value={l}>
+                  {l}
+                </option>
+              ))}
+            </select>
 
+            {showUpgradeModal && (
+              <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
+                <div className='bg-white rounded-lg shadow-lg max-w-sm w-full p-6 space-y-4'>
+                  <h2 className='text-lg font-bold text-gray-800'>
+                    Custom workouts are for Plus users
+                  </h2>
+                  <p className='text-sm text-gray-600'>
+                    Upgrade to the Plus plan to add and track custom lifts.
+                  </p>
+                  <div className='flex justify-end gap-2'>
+                    <button
+                      onClick={() => setShowUpgradeModal(false)}
+                      className='text-sm text-gray-500'
+                    >
+                      Maybe later
+                    </button>
+                    <a
+                      href='/upgrade'
+                      className='text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700'
+                    >
+                      Upgrade
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Weight input */}
           <input
             type='number'
             value={weight}
@@ -140,6 +203,7 @@ export default function LogForm() {
             placeholder='lbs'
           />
 
+          {/* Reps input */}
           <input
             type='number'
             value={maxReps}
@@ -148,6 +212,47 @@ export default function LogForm() {
             placeholder='reps'
           />
         </div>
+
+        <button
+          type='button'
+          onClick={() => {
+            if (userPlan === 'plus') {
+              setShowCustomInput(true)
+            } else {
+              setShowUpgradeModal(true)
+            }
+          }}
+          className='mt-1 text-sm text-gray-500 hover:underline text-left'
+        >
+          + Add custom workout
+        </button>
+
+        {/* Optional: show custom workout input below if toggled */}
+        {showCustomInput && (
+          <div className='mt-2'>
+            <input
+              type='text'
+              value={newLift}
+              onChange={(e) => setNewLift(e.target.value)}
+              placeholder='e.g. Barbell Row'
+              className='w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+            />
+            <div className='flex items-center gap-2'>
+              <button
+                onClick={handleAddCustomLift}
+                className='mt-2 text-sm text-white bg-blue-600 px-4 py-2 rounded'
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setShowCustomInput(false)}
+                className='mt-2 text-sm px-4 py-2'
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div>

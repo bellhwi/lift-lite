@@ -14,8 +14,7 @@ import type { WorkoutLog } from '@/lib/storage'
 import { Button } from '@/components/Button'
 import { useUser } from '@/hooks/useUser'
 import { supabase } from '@/lib/supabase'
-
-const allLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
+import { useCustomLifts } from '@/hooks/useCustomLifts'
 
 export default function ExerciseChart({
   defaultLift,
@@ -26,8 +25,11 @@ export default function ExerciseChart({
   logs: WorkoutLog[]
   setLogs: React.Dispatch<React.SetStateAction<WorkoutLog[]>>
 }) {
-  const user = useUser()
+  const presetLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
+  const { customLifts } = useCustomLifts()
 
+  const [allLifts, setAllLifts] = useState<string[]>(presetLifts)
+  const user = useUser()
   const router = useRouter()
   const [liftName, setLiftName] = useState<string>('Deadlift')
   const [data, setData] = useState<
@@ -38,6 +40,9 @@ export default function ExerciseChart({
   const [editNote, setEditNote] = useState('')
   const [editWeight, setEditWeight] = useState('')
   const [editReps, setEditReps] = useState('')
+  useEffect(() => {
+    setAllLifts([...presetLifts, ...customLifts])
+  }, [customLifts])
 
   useEffect(() => {
     const fallbackLift = logs[0]?.lift || 'Deadlift'
