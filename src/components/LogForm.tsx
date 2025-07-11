@@ -6,8 +6,8 @@ import { Button } from '@/components/Button'
 import { useUser } from '@/hooks/useUser'
 import { useUserName } from '@/hooks/useUserName'
 import { useUserPlan } from '@/hooks/useUserPlan'
-import { useCustomLifts } from '@/hooks/useCustomLifts'
 import { supabase } from '@/lib/supabase'
+import CustomWorkoutManager from '@/components/CustomWorkoutManager'
 
 const presetLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
 
@@ -21,10 +21,25 @@ export default function LogForm() {
   const [weight, setWeight] = useState('')
   const [note, setNote] = useState('')
   const [maxReps, setMaxReps] = useState('')
-  const { customLifts, setCustomLifts } = useCustomLifts()
   const [showCustomInput, setShowCustomInput] = useState(false)
-  const [newLift, setNewLift] = useState('')
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [customLifts, setCustomLifts] = useState<
+    { name: string; id: string }[]
+  >([])
+
+  useEffect(() => {
+    // 초기 Supabase fetch
+    const fetchCustomLifts = async () => {
+      const { data } = await supabase
+        .from('custom_exercises')
+        .select('id, name')
+        .eq('user_id', user?.id)
+
+      if (data) setCustomLifts(data)
+    }
+
+    fetchCustomLifts()
+  }, [user])
 
   useEffect(() => {
     const justLoggedIn = sessionStorage.getItem('justLoggedIn')
@@ -110,33 +125,13 @@ export default function LogForm() {
     router.push('/progress')
   }
 
-  async function handleAddCustomLift() {
-    if (!user || !newLift.trim()) return
-
-    const { error } = await supabase.from('custom_exercises').insert([
-      {
-        user_id: user.id,
-        name: newLift.trim(),
-      },
-    ])
-
-    if (!error) {
-      setCustomLifts((prev) => [...prev, newLift.trim()])
-      setNewLift('')
-      setShowCustomInput(false)
-      setLift(newLift.trim())
-    } else {
-      console.error('Failed to add custom lift:', error.message)
-    }
-  }
-
   return (
     <div className='max-w-md mx-auto px-4 py-8 space-y-6 bg-white'>
       <h1
         className='text-3xl font-bold text-center text-gray-900 cursor-default'
         onClick={() => router.push('/')}
       >
-        LiftLite
+        LiftLite{userPlan === 'plus' && <sup>+</sup>}
       </h1>
       <p className='text-center text-xl text-gray-700'>
         Welcome, {userName} 👋
@@ -151,7 +146,6 @@ export default function LogForm() {
           <div className='flex flex-col flex-[2] min-w-0'>
             <select
               value={lift}
-              onChange={(e) => setLift(e.target.value)}
               className='border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
             >
               {presetLifts.map((l) => (
@@ -160,8 +154,8 @@ export default function LogForm() {
                 </option>
               ))}
               {customLifts.map((l) => (
-                <option key={l} value={l}>
-                  {l}
+                <option key={l.id} value={l.name}>
+                  {l.name}
                 </option>
               ))}
             </select>
@@ -227,31 +221,14 @@ export default function LogForm() {
           + Add custom workout
         </button>
 
-        {/* Optional: show custom workout input below if toggled */}
         {showCustomInput && (
-          <div className='mt-2'>
-            <input
-              type='text'
-              value={newLift}
-              onChange={(e) => setNewLift(e.target.value)}
-              placeholder='e.g. Barbell Row'
-              className='w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
-            />
-            <div className='flex items-center gap-2'>
-              <button
-                onClick={handleAddCustomLift}
-                className='mt-2 text-sm text-white bg-blue-600 px-4 py-2 rounded'
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setShowCustomInput(false)}
-                className='mt-2 text-sm px-4 py-2'
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+          <CustomWorkoutManager
+            currentLift={lift}
+            onSelectLift={(newLift) => setLift(newLift)}
+            onClose={() => setShowCustomInput(false)}
+            customLifts={customLifts}
+            setCustomLifts={setCustomLifts}
+          />
         )}
       </div>
 
