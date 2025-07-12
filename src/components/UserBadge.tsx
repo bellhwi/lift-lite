@@ -18,6 +18,7 @@ export default function UserBadge() {
   const handleLogout = async () => {
     await supabase.auth.signOut()
     localStorage.removeItem('userName')
+    localStorage.removeItem('userPlan')
     router.push('/') // Redirect after logout
   }
 

@@ -125,14 +125,12 @@ export function Pricing() {
           <h2 className='font-display text-3xl tracking-tight text-white sm:text-4xl'>
             <span className='relative whitespace-nowrap'>
               <SwirlyDoodle className='absolute top-1/2 left-0 h-[1em] w-full fill-blue-400' />
-              <span className='relative'>Free forever.</span>
+              <span className='relative'>Lift more.</span>
             </span>{' '}
-            More coming soon.
+            Pay less.
           </h2>
           <p className='mt-4 text-lg text-slate-400'>
-            LiftLite is free forever for solo lifters. LiftLite Plus (coming
-            soon) will unlock multi-device sync and custom lifts — for those who
-            want more flexibility.
+            Start free and simple. A few bucks if you need more.
           </p>
         </div>
         <div className='-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-2 xl:mx-0 xl:gap-x-8'>
@@ -140,30 +138,30 @@ export function Pricing() {
             featured
             name='Free'
             price='$0'
-            description='Lift tracking made simple, right in your browser.'
+            description='For lifters who just want to log and go.'
             href='/log'
             features={[
-              'Log PRs with no limits',
-              'See progress on simple graphs',
-              'No login or download required',
-              'Save locally in your browser',
-              'Totally free to use',
+              'Unlimited top set logging',
+              'Visual progress graphs',
+              'Saves in your browser',
+              'No signups, no downloads',
+              '100% free, forever',
             ]}
             cta='Get started'
           />
           <Plan
             name='Plus'
-            price='TBD'
-            description='Sync your data, customize lifts with more to come.'
+            price='$5/mo'
+            description='For lifters who want a little more control.'
             href='#'
             features={[
-              'Sync your data across devices',
               'Create custom lifts',
-              'Backup your logs',
-              'Access from anywhere',
-              'More features on the way',
+              'Sync across devices',
+              'Export your logs (coming soon)',
+              'Support indie devs who lift too',
+              'Cancel anytime',
             ]}
-            cta='Coming soon'
+            cta='Get started'
           />
         </div>
       </Container>

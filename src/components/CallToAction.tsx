@@ -21,13 +21,13 @@ export function CallToAction() {
       <Container className='relative'>
         <div className='mx-auto max-w-lg text-center'>
           <h2 className='font-display text-3xl tracking-tight text-white sm:text-4xl'>
-            Start logging in seconds.
+            Start lifting smarter.
           </h2>
           <p className='mt-4 text-lg tracking-tight text-white'>
-            No signup, no download, no cost. Just lift and go.
+            No logins. No fees. No distractions. Just you and the bar.
           </p>
           <Button href='/log' color='white' className='mt-10'>
-            Start for free
+            Start free
           </Button>
         </div>
       </Container>

@@ -16,9 +16,8 @@ interface Feature {
 const features: Array<Feature> = [
   {
     name: 'One',
-    summary: 'Select your lift',
-    description:
-      'Choose from preset lifts like Squat or Bench to get started quickly.',
+    summary: 'Pick your lift',
+    description: 'Choose from presets like Squat, Bench, Deadlift.',
 
     icon: () => (
       <span className='material-symbols-outlined text-white text-[28px]'>
@@ -29,7 +28,7 @@ const features: Array<Feature> = [
   {
     name: 'Two',
     summary: 'Log your best set',
-    description: 'Enter the weight, reps, and a quick note. That’s it.',
+    description: 'Weight, reps, note (if you want). Done in seconds.',
 
     icon: () => (
       <span className='material-symbols-outlined text-white text-[28px]'>
@@ -39,8 +38,8 @@ const features: Array<Feature> = [
   },
   {
     name: 'Three',
-    summary: 'See your progress',
-    description: 'Instant visual feedback with clean, simple graphs.',
+    summary: 'Track progress',
+    description: 'Get instant feedback with no-nonsense visuals.',
 
     icon: () => (
       <span className='material-symbols-outlined text-white text-[28px]'>
@@ -141,10 +140,10 @@ export function SecondaryFeatures() {
       <Container>
         <div className='mx-auto max-w-2xl md:text-center'>
           <h2 className='font-display text-3xl tracking-tight text-slate-900 sm:text-4xl'>
-            How LiftLite Works
+            How It Works
           </h2>
           <p className='mt-4 text-lg tracking-tight text-slate-700'>
-            Log your top sets in seconds, track your gains over time.
+            Weight. Reps. Maybe a note. Done.
           </p>
         </div>
         <FeaturesMobile />

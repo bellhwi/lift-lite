@@ -13,21 +13,20 @@ import namePage from '@/images/name-page.png'
 
 const features = [
   {
-    title: 'Log in Seconds',
-    description:
-      'Choose a lift, type your best set, and you’re done. No endless forms or set-by-set inputs.',
+    title: 'Log your top set',
+    description: 'Squat, bench, deadlift—just type your best set and move on.',
     image: logPage,
   },
   {
-    title: 'Visual Progress Tracking',
+    title: 'See your gains',
     description:
-      'Your lifts, visualized clearly over time. See strength trends at a glance with lightweight graphs.',
+      "Clean graphs. No clutter. Know where you're headed at a glance.",
     image: progressPage,
   },
   {
-    title: 'No App Required',
+    title: 'No app needed',
     description:
-      'Works instantly in your browser. Nothing to download, nothing to update—just lift and log.',
+      'Runs in your browser. Works like magic on mobile. No installs. No updates.',
     image: namePage,
   },
 ]
@@ -72,7 +71,8 @@ export function PrimaryFeatures() {
             Track less. Lift more.
           </h2>
           <p className='mt-6 text-lg tracking-tight text-blue-100'>
-            Log only your top set for each lift—fast, simple, and effective.
+            Built for lifters who just want to track progress—not play with
+            apps.
           </p>
         </div>
         <TabGroup

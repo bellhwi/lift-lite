@@ -11,12 +11,15 @@ export default function ProgressPage() {
   const userName = useUserName()
   const [toast, setToast] = useState<string | null>(null)
   const [justSavedLift, setJustSavedLift] = useState<string | null>(null)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     setLogs(initialLogs)
   }, [initialLogs])
 
   useEffect(() => {
+    if (!userName) return
+
     const saved = sessionStorage.getItem('justSaved')
 
     if (saved) {
@@ -35,13 +38,15 @@ export default function ProgressPage() {
           setToast(`✓ ${parsed.lift} saved! Keep it going, ${userName}!`)
         }
 
-        // ✅ 단순하게 여기서 바로 실행
         setTimeout(() => setToast(null), 3000)
       } catch {
         setJustSavedLift(null)
       } finally {
         sessionStorage.removeItem('justSaved')
+        setReady(true) // ✅ 여기서만 호출
       }
+    } else {
+      setReady(true) // ✅ justSaved 없으면 즉시 렌더 준비 완료
     }
   }, [userName])
 
@@ -55,7 +60,7 @@ export default function ProgressPage() {
 
       <div className='max-w-md mx-auto space-y-6'>
         <h1 className='text-2xl font-bold text-gray-900'>Your Progress</h1>
-        {loading ? (
+        {!ready && loading ? (
           <p className='text-center text-gray-500'>Loading your progress...</p>
         ) : (
           <ExerciseChart

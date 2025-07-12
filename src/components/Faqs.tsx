@@ -6,36 +6,34 @@ import backgroundImage from '@/images/background-faqs.jpg'
 const faqs = [
   [
     {
-      question: 'Why is LiftLite so minimal?',
-      answer:
-        'Because logging your workouts shouldn’t feel like a workout. Most fitness apps are overloaded with features that get in the way. LiftLite strips everything down so you can focus on what matters: lifting, logging, and moving on.',
+      question: 'Why is this so minimal?',
+      answer: "Because workouts should be hard. Logging them shouldn't.",
     },
     {
-      question: 'Do I need to create an account to use LiftLite?',
-      answer:
-        'Nope. You can log your workouts instantly without signing up. All your data is saved locally in your browser.',
+      question: 'Do I need an account?',
+      answer: 'Nope. Start logging right now in your browser.',
     },
     {
-      question: 'Where is my workout data stored?',
+      question: 'What if I switch devices?',
       answer:
-        'All your logs stay on your browser — nothing is sent to any server. Just make sure to use the same browser on the same device to keep your data.',
+        'Local data stays in your browser. Want cloud sync? That’s what Plus is for.',
     },
   ],
   [
     {
-      question: 'What if I clear my browser or switch devices?',
+      question: 'If I upgrade to Plus, can I sync my old logs?',
       answer:
-        'Your data is stored only in your current browser. To keep your logs safe across devices, LiftLite Plus will offer sync and backup features soon.',
+        'Yup. When you sign in, we’ll ask if you want to sync your local logs to your account. Just confirm, and they’ll be saved to the cloud.',
     },
     {
-      question: 'Is there a mobile app?',
+      question: 'Is there a lifetime plan?',
       answer:
-        'Nope, and that’s by design. LiftLite is a fast, lightweight web app that works beautifully on mobile — no installs, no updates, just open and log.',
+        'Not yet. We’re keeping it lean and growing slow. Monthly helps us build sustainably.',
     },
     {
-      question: 'Can I track cardio, supersets, or detailed routines?',
+      question: 'Can I track cardio or routines?',
       answer:
-        "Not at the moment. LiftLite is built for simple PR logging. If you're looking for full workout planning tools, this probably isn't the app for you — and that's okay.",
+        'Nope. This is for top sets and PRs. If you want full planning tools, there are other apps for that—and we’re cool with it.',
     },
   ],
 ]
@@ -64,7 +62,7 @@ export function Faqs() {
             Frequently asked questions
           </h2>
           <p className='mt-4 text-lg tracking-tight text-slate-700'>
-            Everything you need to know before your first log.
+            We stripped the fluff from our answers too.
           </p>
         </div>
         <ul

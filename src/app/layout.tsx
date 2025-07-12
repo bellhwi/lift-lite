@@ -9,7 +9,7 @@ import clsx from 'clsx'
 export const metadata: Metadata = {
   title: 'LiftLite',
   description:
-    'LiftLite is a minimal workout tracker that lets you log daily lifts, track your progress with simple charts, and stay consistent. No sign-up required.',
+    'The dead-simple way to log your lifts. No downloads. No signups. No fluff.',
 }
 const inter = Inter({
   subsets: ['latin'],

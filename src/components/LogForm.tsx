@@ -146,6 +146,7 @@ export default function LogForm() {
           <div className='flex flex-col flex-[2] min-w-0'>
             <select
               value={lift}
+              onChange={(e) => setLift(e.target.value)}
               className='border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
             >
               {presetLifts.map((l) => (
