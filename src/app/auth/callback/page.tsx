@@ -1,27 +1,19 @@
-// app/auth/callback/page.tsx
-'use client'
+// src/app/auth/callback/page.tsx
+import { createClientWithResponse } from '@/libs/server'
+import { NextResponse } from 'next/server'
+import { redirect } from 'next/navigation'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+export default async function AuthCallbackPage() {
+  const response = NextResponse.next()
+  const supabase = await createClientWithResponse(response)
 
-export default function AuthCallbackPage() {
-  const router = useRouter()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  useEffect(() => {
-    const redirect = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      if (session) {
-        router.replace('/log') // ✅ go to main app
-      } else {
-        router.replace('/') // fallback if not signed in
-      }
-    }
-
-    redirect()
-  }, [])
-
-  return <p className='text-center mt-10'>Redirecting...</p>
+  if (user) {
+    redirect('/log')
+  } else {
+    redirect('/')
+  }
 }

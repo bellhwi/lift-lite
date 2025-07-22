@@ -3,7 +3,7 @@
 import { type ImageProps } from 'next/image'
 import { Tab, TabGroup, TabList } from '@headlessui/react'
 import clsx from 'clsx'
-import { Container } from '@/components/Container'
+import { Container } from '@/components/Landing/Container'
 
 interface Feature {
   name: React.ReactNode

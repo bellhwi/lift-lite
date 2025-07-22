@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import { useUser } from '@/hooks/useUser'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/libs/supabase/client'
 import { useRouter } from 'next/navigation'
 
 export default function UserBadge() {

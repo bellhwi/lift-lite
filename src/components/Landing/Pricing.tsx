@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 
-import { Button } from '@/components/Button'
-import { Container } from '@/components/Container'
+import { Button } from '@/components/Landing/Button'
+import { Container } from '@/components/Landing/Container'
 
 function SwirlyDoodle(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -153,13 +153,13 @@ export function Pricing() {
             name='Plus'
             price='$5/mo'
             description='For lifters who want a little more control.'
-            href='#'
+            href='/upgrade'
             features={[
               'Create custom lifts',
               'Sync across devices',
-              'Export your logs (coming soon)',
-              'Support indie devs who lift too',
+              'Support indie dev who lift too',
               'Cancel anytime',
+              'Early access pricing – lock in $5/month before it goes up',
             ]}
             cta='Get started'
           />

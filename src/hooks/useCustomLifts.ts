@@ -1,6 +1,5 @@
-// hooks/useCustomLifts.ts
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/libs/supabase/client'
 import { useUser } from './useUser'
 
 export function useCustomLifts() {
@@ -9,7 +8,6 @@ export function useCustomLifts() {
 
   useEffect(() => {
     if (!user) return
-
     const fetchLifts = async () => {
       const { data, error } = await supabase
         .from('custom_exercises')
@@ -24,5 +22,5 @@ export function useCustomLifts() {
     fetchLifts()
   }, [user])
 
-  return { customLifts, setCustomLifts }
+  return { customLifts }
 }

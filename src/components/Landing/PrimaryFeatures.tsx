@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 import clsx from 'clsx'
 
-import { Container } from '@/components/Container'
+import { Container } from '@/components/Landing/Container'
 import backgroundImage from '@/images/background-features.jpg'
 import logPage from '@/images/log-page.png'
 import progressPage from '@/images/progress-page.png'

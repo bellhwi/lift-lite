@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/libs/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@/hooks/useUser'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/Landing/Button'
 
 export default function SignInPage() {
   const router = useRouter()
@@ -12,18 +12,17 @@ export default function SignInPage() {
 
   useEffect(() => {
     if (user) {
-      router.push('/log') // 로그인된 경우 자동 이동
+      router.push('/log')
     }
   }, [user])
 
   const handleLogin = async () => {
-    // ✅ 로그인 직후 flag 남기기
     sessionStorage.setItem('justLoggedIn', 'true')
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'http://localhost:3000/log', // 또는 배포 주소
+        redirectTo: 'http://localhost:3000/log',
       },
     })
 
@@ -34,20 +33,19 @@ export default function SignInPage() {
   }
 
   return (
-    <>
-      <main className='min-h-screen bg-white px-4 py-6'>
-        <div className='max-w-md mx-auto px-4 py-8 space-y-6 bg-white'>
-          <h1 className='text-3xl font-bold text-center text-gray-900'>
-            Sign in to LiftLite
-          </h1>
-          <p className='text-center text-gray-600'>
-            Sync your workouts and track progress across devices
-          </p>
-          <Button onClick={handleLogin} className='w-full' color='blue'>
-            Continue with Google
-          </Button>
-        </div>
-      </main>
-    </>
+    <main className='min-h-screen bg-white px-4 py-6'>
+      <div className='max-w-md mx-auto px-4 py-8 space-y-6 bg-white'>
+        <h1 className='text-3xl font-bold text-center text-gray-900'>
+          Sign in to LiftLite
+        </h1>
+        <p className='text-center text-gray-600'>
+          Add your name to your log. <br />
+          Start personalizing your workouts.
+        </p>
+        <Button onClick={handleLogin} className='w-full' color='blue'>
+          Continue with Google
+        </Button>
+      </div>
+    </main>
   )
 }

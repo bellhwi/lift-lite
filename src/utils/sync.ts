@@ -1,6 +1,6 @@
 // lib/sync.ts
-import { supabase } from '@/lib/supabase'
-import { getLogs, WorkoutLog } from './storage'
+import { supabase } from '@/libs/supabase/client'
+import { getLogs } from './storage'
 
 export async function syncLocalLogsToSupabase() {
   const localLogs = getLogs()

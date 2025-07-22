@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/libs/supabase/client'
 
 export async function fetchWorkoutsFromSupabase() {
   const {

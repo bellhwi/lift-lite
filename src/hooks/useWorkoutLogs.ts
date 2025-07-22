@@ -1,8 +1,8 @@
 // hooks/useWorkoutLogs.ts
 import { useEffect, useState } from 'react'
 import { useUser } from './useUser'
-import { supabase } from '@/lib/supabase'
-import { getLogs, WorkoutLog } from '@/lib/storage'
+import { supabase } from '@/libs/supabase/client'
+import { getLogs, WorkoutLog } from '@/utils/storage'
 
 export function useWorkoutLogs() {
   const user = useUser()
@@ -41,5 +41,5 @@ export function useWorkoutLogs() {
     }
   }, [user])
 
-  return { logs, loading }
+  return { logs, setLogs, loading }
 }

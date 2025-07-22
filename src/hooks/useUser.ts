@@ -1,6 +1,6 @@
 // hooks/useUser.ts
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/libs/supabase/client'
 import type { User } from '@supabase/supabase-js'
 
 export function useUser() {

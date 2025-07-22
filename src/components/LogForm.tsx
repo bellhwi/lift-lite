@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/Landing/Button'
 import { useUser } from '@/hooks/useUser'
 import { useUserName } from '@/hooks/useUserName'
 import { useUserPlan } from '@/hooks/useUserPlan'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/libs/supabase/client'
 import CustomWorkoutManager from '@/components/CustomWorkoutManager'
 
 const presetLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
@@ -15,7 +15,7 @@ export default function LogForm() {
   const router = useRouter()
   const user = useUser()
   const userName = useUserName()
-  const userPlan = useUserPlan()
+  const { localPlan, dbPlan } = useUserPlan()
   const today = new Date().toLocaleDateString('en-CA') // e.g., "2025-06-19"
   const [lift, setLift] = useState(presetLifts[0])
   const [weight, setWeight] = useState('')
@@ -28,11 +28,12 @@ export default function LogForm() {
   >([])
 
   useEffect(() => {
+    if (!user?.id) return // user.id가 없으면 fetch 안 함
     // 초기 Supabase fetch
     const fetchCustomLifts = async () => {
       const { data } = await supabase
         .from('custom_exercises')
-        .select('id, name')
+        .select()
         .eq('user_id', user?.id)
 
       if (data) setCustomLifts(data)
@@ -45,23 +46,27 @@ export default function LogForm() {
     const justLoggedIn = sessionStorage.getItem('justLoggedIn')
     const hasSyncedBefore = localStorage.getItem('hasSyncedBefore')
 
-    if (justLoggedIn && !hasSyncedBefore) {
-      const confirmed = confirm(
-        'Would you like to sync your name and previous workout logs to your account?'
-      )
-
-      if (confirmed) {
-        Promise.all([
-          import('@/lib/syncProfile').then((m) => m.syncUserProfile()),
-          import('@/lib/sync').then((m) => m.syncLocalLogsToSupabase()),
-        ]).then(() => {
-          localStorage.setItem('hasSyncedBefore', 'true') // ✅ 최초 동기화 체크
-        })
-      }
-
+    if (justLoggedIn) {
       sessionStorage.removeItem('justLoggedIn')
+
+      // ✅ 아직 싱크 안 했고 플랜이 plus면 → sync 후 새로고침
+      if (!hasSyncedBefore && dbPlan === 'plus') {
+        const confirmed = confirm(
+          'Looks like you’ve got local logs. Want to sync them to your LiftLite Plus account?'
+        )
+
+        if (confirmed) {
+          Promise.all([
+            import('@/utils/syncProfile').then((m) => m.syncUserProfile()),
+            import('@/utils/sync').then((m) => m.syncLocalLogsToSupabase()),
+          ]).then(() => {
+            localStorage.setItem('hasSyncedBefore', 'true')
+          })
+          return
+        }
+      }
     }
-  }, [])
+  }, [localPlan])
 
   const handleSave = async () => {
     if (!weight) {
@@ -131,7 +136,7 @@ export default function LogForm() {
         className='text-3xl font-bold text-center text-gray-900 cursor-default'
         onClick={() => router.push('/')}
       >
-        LiftLite{userPlan === 'plus' && <sup>+</sup>}
+        LiftLite{localPlan === 'plus' && <sup>+</sup>}
       </h1>
       <p className='text-center text-xl text-gray-700'>
         Welcome, {userName} 👋
@@ -211,7 +216,7 @@ export default function LogForm() {
         <button
           type='button'
           onClick={() => {
-            if (userPlan === 'plus') {
+            if (dbPlan === 'plus') {
               setShowCustomInput(true)
             } else {
               setShowUpgradeModal(true)

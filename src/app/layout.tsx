@@ -1,7 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
-import FeedbackWidget from '@/components/FeedbackWidget'
+import FeedbackWidget from '@/components/Landing/FeedbackWidget'
 import Script from 'next/script'
 import { Inter, Lexend } from 'next/font/google'
 import clsx from 'clsx'

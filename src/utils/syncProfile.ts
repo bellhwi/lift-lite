@@ -1,5 +1,5 @@
 // lib/syncProfile.ts
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/libs/supabase/client'
 
 export async function syncUserProfile() {
   const {
