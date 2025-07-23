@@ -28,7 +28,7 @@ export default function UserBadge() {
         <>
           {user.user_metadata?.avatar_url && (
             <img
-              src={user.user_metadata.avatar_url}
+              src={user.user_metadata.avatar_url || '/default-avatar.png'}
               alt='profile'
               className='w-8 h-8 rounded-full'
             />

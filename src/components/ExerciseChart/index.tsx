@@ -30,16 +30,24 @@ export default function ExerciseChart({
   const user = useUser()
   const router = useRouter()
   const [liftName, setLiftName] = useState<string>('Deadlift')
+  const [userPlan, setUserPlan] = useState<'free' | 'plus' | null>(null)
   const [data, setData] = useState<
     { date: string; weight: number; maxReps?: number }[]
   >([])
   const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
-    if (customLifts !== null) {
-      setAllLifts([...presetLifts, ...customLifts])
+    const plan = localStorage.getItem('userPlan') as 'free' | 'plus' | null
+    setUserPlan(plan || 'free')
+  }, [])
+
+  useEffect(() => {
+    if (userPlan === 'plus') {
+      setAllLifts([...presetLifts, ...(customLifts ?? [])])
+    } else {
+      setAllLifts(presetLifts)
     }
-  }, [customLifts])
+  }, [userPlan, customLifts])
 
   useEffect(() => {
     const fallbackLift = logs[0]?.lift || 'Deadlift'
@@ -54,7 +62,7 @@ export default function ExerciseChart({
 
   const filteredLogs = sortLogsByDateDesc(filterLogsByLift(logs, liftName))
 
-  if (customLifts === null) return null
+  if (!userPlan) return null
 
   return (
     <div className='w-full max-w-md mx-auto pb-8 space-y-6'>
