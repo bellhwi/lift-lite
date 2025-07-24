@@ -30,6 +30,7 @@ export default function UserBadge() {
             <img
               src={user.user_metadata.avatar_url || '/default-avatar.png'}
               alt='profile'
+              referrerPolicy='no-referrer'
               className='w-8 h-8 rounded-full'
             />
           )}
