@@ -85,7 +85,7 @@ export default function LogForm() {
 
     const key = `log-${today}-${lift}`
 
-    if (user) {
+    if (user && dbPlan === 'plus') {
       // 로그인 상태 → Supabase upsert (insert or update)
       await supabase
         .from('workouts')
