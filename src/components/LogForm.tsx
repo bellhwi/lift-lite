@@ -57,7 +57,6 @@ export default function LogForm() {
 
         if (confirmed) {
           Promise.all([
-            import('@/utils/syncProfile').then((m) => m.syncUserProfile()),
             import('@/utils/sync').then((m) => m.syncLocalLogsToSupabase()),
           ]).then(() => {
             localStorage.setItem('hasSyncedBefore', 'true')
