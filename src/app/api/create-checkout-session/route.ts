@@ -1,4 +1,4 @@
-import { createClient } from '@/libs/server' // 네가 만든 createClient 함수 경로에 맞게 수정
+import { createClient } from '@/libs/supabase/server' // 네가 만든 createClient 함수 경로에 맞게 수정
 import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
