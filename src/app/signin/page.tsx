@@ -22,7 +22,7 @@ export default function SignInPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'http://localhost:3000/log',
+        redirectTo: 'http://localhost:3000/auth/callback?next=/log',
       },
     })
 
