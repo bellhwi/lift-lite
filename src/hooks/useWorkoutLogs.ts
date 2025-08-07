@@ -1,11 +1,12 @@
-// hooks/useWorkoutLogs.ts
 import { useEffect, useState } from 'react'
 import { useUser } from './useUser'
+import { useUserPlan } from './useUserPlan'
 import { supabase } from '@/libs/supabase/client'
 import { getLogs, WorkoutLog } from '@/utils/storage'
 
 export function useWorkoutLogs() {
   const user = useUser()
+  const { dbPlan } = useUserPlan()
   const [logs, setLogs] = useState<WorkoutLog[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -13,33 +14,36 @@ export function useWorkoutLogs() {
     const fetchLogs = async () => {
       setLoading(true)
 
-      if (!user) {
-        // not logged in, fallback to localStorage
+      // 게스트 또는 free 플랜 유저
+      if (user === null || dbPlan === 'free') {
         setLogs(getLogs())
         setLoading(false)
         return
       }
 
-      const { data, error } = await supabase
-        .from('workouts')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('date', { ascending: false })
+      // 유료 플랜 유저
+      if (user) {
+        const { data, error } = await supabase
+          .from('workouts')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('date', { ascending: false })
 
-      if (error) {
-        console.error('❌ Failed to fetch workouts:', error)
-        setLogs([])
-      } else {
-        setLogs(data)
+        if (error) {
+          console.error('❌ Failed to fetch workouts:', error)
+          setLogs([])
+        } else {
+          setLogs(data)
+        }
+
+        setLoading(false)
       }
-
-      setLoading(false)
     }
 
     if (user !== undefined) {
       fetchLogs()
     }
-  }, [user])
+  }, [user, dbPlan])
 
   return { logs, setLogs, loading }
 }

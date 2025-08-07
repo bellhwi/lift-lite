@@ -5,19 +5,18 @@ import { useUser } from './useUser'
 export function useUserPlan() {
   const user = useUser()
   const [localPlan, setLocalPlan] = useState<string | null>(null)
-  const [dbPlan, setDbPlan] = useState<string | null>(null)
+  const [dbPlan, setDbPlan] = useState<string>('free') // ✅ 기본값 'free'
 
   useEffect(() => {
-    // ✅ localStorage에서 빠르게 가져와서 UI에 사용
     const local = localStorage.getItem('userPlan')
     if (local) setLocalPlan(local)
   }, [])
 
   useEffect(() => {
     const fetchPlan = async () => {
-      if (!user) return
+      if (!user) return // null(게스트)든 undefined(로딩 중)이든 무시
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('profiles')
         .select('plan')
         .eq('id', user.id)
@@ -25,7 +24,9 @@ export function useUserPlan() {
 
       if (data?.plan) {
         setDbPlan(data.plan)
-        localStorage.setItem('userPlan', data.plan) // 캐싱도 여전히 유지
+        localStorage.setItem('userPlan', data.plan)
+      } else if (error) {
+        console.error('❌ Failed to fetch user plan:', error)
       }
     }
 

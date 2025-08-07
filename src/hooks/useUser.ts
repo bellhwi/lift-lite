@@ -4,7 +4,7 @@ import { supabase } from '@/libs/supabase/client'
 import type { User } from '@supabase/supabase-js'
 
 export function useUser() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null | undefined>(undefined) // ✅ default: undefined
 
   useEffect(() => {
     const getUser = async () => {
