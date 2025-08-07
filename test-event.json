@@ -1,0 +1,12 @@
+{
+  "id": "evt_test_webhook",
+  "object": "event",
+  "type": "checkout.session.completed",
+  "data": {
+    "object": {
+      "metadata": {
+        "user_id": "your-supabase-user-id"
+      }
+    }
+  }
+}

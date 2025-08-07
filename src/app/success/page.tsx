@@ -14,9 +14,6 @@ export default function SuccessPage() {
       } = await supabase.auth.getUser()
 
       if (!user) return
-
-      await supabase.from('profiles').update({ plan: 'plus' }).eq('id', user.id)
-      localStorage.setItem('userPlan', 'plus')
       router.push('/log')
     }
 

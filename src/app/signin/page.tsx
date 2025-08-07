@@ -17,8 +17,6 @@ export default function SignInPage() {
   }, [user])
 
   const handleLogin = async () => {
-    sessionStorage.setItem('justLoggedIn', 'true')
-
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {

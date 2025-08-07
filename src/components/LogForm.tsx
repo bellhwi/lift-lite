@@ -43,29 +43,29 @@ export default function LogForm() {
   }, [user])
 
   useEffect(() => {
-    const justLoggedIn = sessionStorage.getItem('justLoggedIn')
-    const hasSyncedBefore = localStorage.getItem('hasSyncedBefore')
+    const autoSyncLogs = async () => {
+      if (!user?.id || dbPlan !== 'plus') return
 
-    if (justLoggedIn) {
-      sessionStorage.removeItem('justLoggedIn')
+      const syncedKey = `hasSyncedBefore:${user.id}`
+      const hasSynced = localStorage.getItem(syncedKey)
+      if (hasSynced) return
 
-      // ✅ 아직 싱크 안 했고 플랜이 plus면 → sync 후 새로고침
-      if (!hasSyncedBefore && dbPlan === 'plus') {
-        const confirmed = confirm(
-          'Looks like you’ve got local logs. Want to sync them to your LiftLite Plus account?'
-        )
+      const { getLogs } = await import('@/utils/storage')
+      const localLogs = getLogs()
+      if (localLogs.length === 0) return
 
-        if (confirmed) {
-          Promise.all([
-            import('@/utils/sync').then((m) => m.syncLocalLogsToSupabase()),
-          ]).then(() => {
-            localStorage.setItem('hasSyncedBefore', 'true')
-          })
-          return
-        }
+      try {
+        const { syncLocalLogsToSupabase } = await import('@/utils/sync')
+        await syncLocalLogsToSupabase()
+        localStorage.setItem(syncedKey, 'true')
+        location.reload()
+      } catch (e) {
+        console.error('Auto sync failed:', e)
       }
     }
-  }, [localPlan])
+
+    autoSyncLogs()
+  }, [user, dbPlan])
 
   const handleSave = async () => {
     if (!weight) {

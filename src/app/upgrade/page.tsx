@@ -13,7 +13,7 @@ export default function UpgradePage() {
       return
     }
 
-    const res = await fetch('/api/create-checkout-session', {
+    const res = await fetch('/api/stripe/create-checkout-session', {
       method: 'POST',
       credentials: 'include',
     })
