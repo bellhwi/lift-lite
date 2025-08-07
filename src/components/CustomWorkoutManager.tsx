@@ -24,8 +24,6 @@ export default function CustomWorkoutManager({
 }) {
   const user = useUser()
   const [newLift, setNewLift] = useState('')
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editName, setEditName] = useState('')
 
   const handleAdd = async () => {
     if (!user || !newLift.trim()) return
@@ -54,30 +52,6 @@ export default function CustomWorkoutManager({
     if (currentLift === name) onSelectLift('Squat')
   }
 
-  const handleEdit = async () => {
-    if (!user || !editingId || !editName.trim()) return
-
-    const { error } = await supabase
-      .from('custom_exercises')
-      .update({ name: editName.trim() })
-      .eq('id', editingId)
-
-    if (!error) {
-      setCustomLifts((prev) =>
-        prev.map((l) =>
-          l.id === editingId ? { ...l, name: editName.trim() } : l
-        )
-      )
-
-      if (currentLift === customLifts.find((l) => l.id === editingId)?.name) {
-        onSelectLift(editName.trim())
-      }
-
-      setEditingId(null)
-      setEditName('')
-    }
-  }
-
   return (
     <div className='mt-2 space-y-3 text-sm'>
       <div className='flex gap-2'>
@@ -103,52 +77,15 @@ export default function CustomWorkoutManager({
               key={id}
               className='flex justify-between items-center border border-gray-200 rounded px-3 py-2'
             >
-              {editingId === id ? (
-                <div className='flex w-full items-center gap-2'>
-                  <input
-                    type='text'
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    className='flex-1 border border-gray-300 p-1 rounded'
-                  />
-                  <button
-                    onClick={handleEdit}
-                    className='text-xs text-blue-500 py-1 rounded'
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => {
-                      setEditingId(null)
-                      setEditName('')
-                    }}
-                    className='text-xs text-gray-400'
-                  >
-                    Cancel
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <span>{name}</span>
-                  <div className='flex gap-2'>
-                    <button
-                      onClick={() => {
-                        setEditingId(id)
-                        setEditName(name)
-                      }}
-                      className='text-blue-500 text-xs hover:underline'
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(id, name)}
-                      className='text-red-500 text-xs hover:underline'
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </>
-              )}
+              <>
+                <span>{name}</span>
+                <button
+                  onClick={() => handleDelete(id, name)}
+                  className='text-red-500 text-xs hover:underline'
+                >
+                  Delete
+                </button>
+              </>
             </li>
           ))}
         </ul>
