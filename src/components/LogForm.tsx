@@ -15,7 +15,7 @@ export default function LogForm() {
   const router = useRouter()
   const user = useUser()
   const userName = useUserName()
-  const { localPlan, dbPlan } = useUserPlan()
+  const { dbPlan } = useUserPlan()
   const today = new Date().toLocaleDateString('en-CA') // e.g., "2025-06-19"
   const [lift, setLift] = useState(presetLifts[0])
   const [weight, setWeight] = useState('')
@@ -83,7 +83,8 @@ export default function LogForm() {
     }
 
     const key = `log-${today}-${lift}`
-
+    console.log('user status: ', user)
+    console.log('plan status: ', dbPlan)
     if (user && dbPlan === 'plus') {
       // 로그인 상태 → Supabase upsert (insert or update)
       await supabase
@@ -135,7 +136,7 @@ export default function LogForm() {
         className='text-3xl font-bold text-center text-gray-900 cursor-default'
         onClick={() => router.push('/')}
       >
-        LiftLite{localPlan === 'plus' && <sup>+</sup>}
+        LiftLite
       </h1>
       <p className='text-center text-xl text-gray-700'>
         Welcome, {userName} 👋
