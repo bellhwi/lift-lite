@@ -25,7 +25,6 @@ export default function ExerciseChart({
   const user = useUser()
   const router = useRouter()
   const [isEditing, setIsEditing] = useState(false)
-
   if (!userPlan || !liftName) return null
 
   return (

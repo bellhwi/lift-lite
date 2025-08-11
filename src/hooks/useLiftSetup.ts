@@ -10,6 +10,9 @@ import {
 } from '@/utils/workoutLogHelpers'
 import type { WorkoutLog } from '@/utils/storage'
 
+const LAST_LIFT_KEY = 'lastLift'
+const PRESETS = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
+
 export function useLiftSetup({
   defaultLift,
   logs,
@@ -17,32 +20,51 @@ export function useLiftSetup({
   defaultLift: string | null
   logs: WorkoutLog[]
 }) {
-  const presetLifts = ['Squat', 'Deadlift', 'Bench Press', 'Military Press']
   const { customLifts } = useCustomLifts()
-  const { dbPlan, planLoading } = useUserPlan() // ✅ 로컬 플랜 제거, DB 플랜만 사용
+  const { dbPlan, planLoading } = useUserPlan()
 
-  const [allLifts, setAllLifts] = useState<string[]>(presetLifts)
-  const [liftName, setLiftName] = useState<string | null>(null)
+  const [allLifts, setAllLifts] = useState<string[]>(PRESETS)
+
+  // ✅ 초기 렌더에서 바로 liftName 결정 (로그 없어도 동작)
+  const [liftName, setLiftName] = useState<string | null>(() => {
+    const saved =
+      typeof window !== 'undefined' ? localStorage.getItem(LAST_LIFT_KEY) : null
+    return defaultLift ?? saved ?? logs[0]?.lift ?? PRESETS[0] ?? null
+  })
+
   const [data, setData] = useState<
     { date: string; weight: number; maxReps?: number }[]
   >([])
 
-  // 플랜/커스텀 리프트 변경 시 리프트 목록 갱신
+  // 플랜/커스텀 리프트에 따라 목록 구성
   useEffect(() => {
     if (dbPlan === 'plus') {
-      setAllLifts([...presetLifts, ...(customLifts ?? [])])
+      setAllLifts([...PRESETS, ...(customLifts ?? [])])
     } else {
-      setAllLifts(presetLifts)
+      setAllLifts(PRESETS)
     }
   }, [dbPlan, customLifts])
 
-  // 기본 리프트 선택 (플랜과 무관)
+  // ✅ defaultLift가 나중에 도착하면 1회 보충 세팅
   useEffect(() => {
-    if (liftName) return
-    if (logs.length === 0) return
-    const fallbackLift = logs[0]?.lift || 'Deadlift'
-    setLiftName(defaultLift || fallbackLift)
-  }, [defaultLift, logs, liftName])
+    if (!liftName && defaultLift) setLiftName(defaultLift)
+  }, [defaultLift, liftName])
+
+  // ✅ 로그가 나중에 생겨도 1회 보충 세팅
+  useEffect(() => {
+    if (!liftName && logs.length > 0) {
+      setLiftName(logs[0]?.lift ?? PRESETS[0])
+    }
+  }, [logs.length, liftName])
+
+  // ✅ 사용자 선택 기억
+  useEffect(() => {
+    if (liftName) {
+      try {
+        localStorage.setItem(LAST_LIFT_KEY, liftName)
+      } catch {}
+    }
+  }, [liftName])
 
   // 차트 데이터 계산
   useEffect(() => {
@@ -61,7 +83,7 @@ export function useLiftSetup({
     allLifts,
     data,
     filteredLogs,
-    userPlan: dbPlan, // 🔁 외부 호환성 유지를 위해 같은 키로 반환
-    planLoading, // (선택) 소비 측에서 로딩 제어 가능
+    userPlan: dbPlan,
+    planLoading,
   }
 }

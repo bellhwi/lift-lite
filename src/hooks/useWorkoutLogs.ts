@@ -12,7 +12,6 @@ export function useWorkoutLogs() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    console.log(user)
     // ✅ 유저/플랜 둘 다 확정되기 전에는 절대 진행하지 않음
     if (user === undefined || planLoading || dbPlan === undefined) return
 
