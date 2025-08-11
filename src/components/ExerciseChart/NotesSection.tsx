@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { deleteLog, updateLog } from './LogActions'
 import type { WorkoutLog } from '@/utils/storage'
 import type { User } from '@supabase/supabase-js'
+import { formatShortDateLocal } from '@/utils/workoutLogHelpers'
 
 export default function NotesSection({
   logs,
@@ -39,10 +40,7 @@ export default function NotesSection({
       </div>
 
       {logs.map((log, index) => {
-        const formattedDate = new Date(log.date).toLocaleDateString('en-US', {
-          month: 'long',
-          day: 'numeric',
-        })
+        const formattedDate = formatShortDateLocal(log.date)
 
         const isCurrent =
           editingLog?.date === log.date && editingLog?.lift === log.lift
