@@ -17,16 +17,16 @@ export default function SignInPage() {
   }, [user])
 
   const handleLogin = async () => {
-    const base =
-      typeof window !== 'undefined'
-        ? window.location.origin
-        : process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+    const base = typeof window !== 'undefined' ? window.location.origin : ''
+    const isDev = base.includes('localhost')
+
+    const redirectTo = isDev
+      ? `${base}/log` // dev: land on /log directly
+      : `${base}/auth/callback?next=/log` // prod: use callback
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: {
-        redirectTo: `${base}/auth/callback?next=/log`,
-      },
+      options: { redirectTo },
     })
     if (error) {
       alert('Login failed!')
