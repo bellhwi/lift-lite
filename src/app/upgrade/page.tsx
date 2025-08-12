@@ -34,10 +34,11 @@ export default function UpgradePage() {
           Upgrade to LiftLite Plus
         </h1>
         <p className='text-center text-gray-600'>
-          Custom lifts. Cloud sync. A log that follows you anywhere.
+          Unlock custom lift tracking, automatic cloud backups, and a workout
+          log you can access anytime, anywhere.
         </p>
         <p className='text-center text-sm text-gray-500'>
-          $5/month – early access pricing. Yours for good.
+          $5/month – early access pricing, locked in for life.
         </p>
 
         <div className='flex gap-2 pt-2'>

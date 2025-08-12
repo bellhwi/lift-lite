@@ -37,5 +37,7 @@ export async function syncLocalLogsToSupabase() {
     if (key.startsWith('log-')) localStorage.removeItem(key)
   }
 
-  alert('✅ Successfully synced workout logs to your account!')
+  alert(
+    '🎉 Thanks for upgrading to Plus! All your workouts are now synced to your account.'
+  )
 }

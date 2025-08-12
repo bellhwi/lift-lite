@@ -37,4 +37,4 @@ Most fitness apps are bloated with features you don't need. LiftLite focuses on 
 
 ## Live Demo
 
-[Try LiftLite](https://lift-lite.vercel.app)
+[Try LiftLite](https://liftlite.app)
