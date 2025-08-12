@@ -148,11 +148,11 @@ export default function LogForm() {
         </label>
         <div className='flex flex-wrap gap-2'>
           {/* Workout dropdown + add custom text */}
-          <div className='flex flex-col flex-[2] min-w-0'>
+          <div className='relative flex flex-col flex-[2] min-w-0'>
             <select
               value={lift}
               onChange={(e) => setLift(e.target.value)}
-              className='border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+              className='w-full h-12 px-3 py-0 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black appearance-none '
             >
               {presetLifts.map((l) => (
                 <option key={l} value={l}>
@@ -165,6 +165,19 @@ export default function LogForm() {
                 </option>
               ))}
             </select>
+
+            {/* Chevron */}
+            <svg
+              aria-hidden='true'
+              className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-black'
+              viewBox='0 -960 960 960'
+              xmlns='http://www.w3.org/2000/svg'
+              width='20'
+              height='20'
+              fill='currentColor'
+            >
+              <path d='M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z' />
+            </svg>
 
             {showUpgradeModal && (
               <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
@@ -199,7 +212,7 @@ export default function LogForm() {
             type='number'
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            className='flex-1 min-w-0 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+            className='flex-1 min-w-0 border border-gray-300 h-12 px-3 py-0 rounded focus:outline-none focus:ring-2 focus:ring-black'
             placeholder='lbs'
           />
 
@@ -208,7 +221,7 @@ export default function LogForm() {
             type='number'
             value={maxReps}
             onChange={(e) => setMaxReps(e.target.value)}
-            className='flex-1 min-w-0 border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-black'
+            className='flex-1 min-w-0 border border-gray-300 h-12 px-3 py-0 rounded focus:outline-none focus:ring-2 focus:ring-black'
             placeholder='reps'
           />
         </div>

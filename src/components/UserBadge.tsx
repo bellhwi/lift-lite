@@ -51,17 +51,7 @@ export default function UserBadge() {
     await supabase.auth.signOut()
     // ok to clear legacy local flags, but UI logic must use DB plan only
     localStorage.removeItem('userName')
-    localStorage.removeItem('userPlan')
     router.push('/')
-  }
-
-  const handleUpgrade = async () => {
-    // Option A: direct to your upgrade page UI
-    router.push('/upgrade')
-    // Option B: call your Checkout Session API directly:
-    // const res = await fetch('/api/stripe/create-checkout-session', { method: 'POST' })
-    // const { url } = await res.json()
-    // if (url) window.location.href = url
   }
 
   const handlePortal = async () => {
@@ -118,7 +108,7 @@ export default function UserBadge() {
         <div
           ref={menuRef}
           role='menu'
-          className='absolute right-4 top-12 w-56 rounded-xl border bg-white shadow-lg p-1'
+          className='absolute right-4 top-12 w-56 rounded-xl border border-gray-300 bg-white shadow-lg p-1'
         >
           <div className='px-3 py-2 text-xs text-gray-500'>
             {planLoading
@@ -130,7 +120,7 @@ export default function UserBadge() {
           {!isPlus && !planLoading && (
             <button
               role='menuitem'
-              onClick={handleUpgrade}
+              onClick={() => router.push('/upgrade')}
               className='w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-gray-100'
             >
               Upgrade to Plus
