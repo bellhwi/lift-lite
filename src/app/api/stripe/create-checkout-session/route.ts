@@ -32,6 +32,7 @@ export async function POST() {
     metadata: {
       user_id: user.id,
     },
+    allow_promotion_codes: true,
   })
 
   return new Response(JSON.stringify({ url: session.url }))
