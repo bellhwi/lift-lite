@@ -8,6 +8,8 @@ import { useUser } from '@/hooks/useUser'
 import { useUserPlan } from '@/hooks/useUserPlan'
 import { supabase } from '@/libs/supabase/client'
 
+type CancelInfo = { scheduled: boolean; cancelAt: Date | null }
+
 export default function UserBadge() {
   const user = useUser()
   const { dbPlan, planLoading } = useUserPlan()
@@ -17,6 +19,12 @@ export default function UserBadge() {
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
   const btnRef = useRef<HTMLButtonElement | null>(null)
+
+  const [cancelInfo, setCancelInfo] = useState<CancelInfo>({
+    scheduled: false,
+    cancelAt: null,
+  })
+  const [syncing, setSyncing] = useState(false)
 
   const firstName =
     user?.user_metadata?.full_name?.split(' ')[0] ??
@@ -47,9 +55,38 @@ export default function UserBadge() {
     }
   }, [open])
 
+  // 메뉴를 열 때: 상태 동기화 + 취소예약 상태 로드
+  useEffect(() => {
+    if (!open || !user) return
+    ;(async () => {
+      try {
+        setSyncing(true)
+        // 1) 서버와 강제 동기화 (웹훅 누락 대비)
+        await fetch('/api/stripe/sync-subscription', { method: 'POST' }).catch(
+          () => {}
+        )
+
+        // 2) 내 프로필에서 취소예약 상태만 읽기 (RLS에서 본인 row select 허용 가정)
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('cancel_at, cancel_at_period_end')
+          .eq('id', user.id)
+          .single()
+
+        if (!error && data) {
+          setCancelInfo({
+            scheduled: !!data.cancel_at_period_end,
+            cancelAt: data.cancel_at ? new Date(data.cancel_at) : null,
+          })
+        }
+      } finally {
+        setSyncing(false)
+      }
+    })()
+  }, [open, user])
+
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    // ok to clear legacy local flags, but UI logic must use DB plan only
     localStorage.removeItem('userName')
     router.push('/')
   }
@@ -65,6 +102,15 @@ export default function UserBadge() {
     const { url } = await res.json()
     if (url) window.location.href = url
   }
+
+  const fmt = (d: Date | null) =>
+    d
+      ? d.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        })
+      : ''
 
   if (!user) {
     return (
@@ -108,15 +154,18 @@ export default function UserBadge() {
         <div
           ref={menuRef}
           role='menu'
-          className='absolute right-4 top-12 w-56 rounded-xl border border-gray-300 bg-white shadow-lg p-1'
+          className='absolute right-4 top-12 w-64 rounded-xl border border-gray-300 bg-white shadow-lg p-1'
         >
           <div className='px-3 py-2 text-xs text-gray-500'>
-            {planLoading
+            {planLoading || syncing
               ? 'Checking plan…'
               : isPlus
-              ? 'Plan: Plus'
+              ? cancelInfo.scheduled
+                ? `Plan: Plus · Cancels ${fmt(cancelInfo.cancelAt)}`
+                : 'Plan: Plus'
               : 'Plan: Free'}
           </div>
+
           {!isPlus && !planLoading && (
             <button
               role='menuitem'
@@ -126,15 +175,17 @@ export default function UserBadge() {
               Upgrade to Plus
             </button>
           )}
+
           {isPlus && !planLoading && (
             <button
               role='menuitem'
               onClick={handlePortal}
               className='w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-gray-100'
             >
-              Cancel subscription
+              Manage subscription
             </button>
           )}
+
           <button
             role='menuitem'
             onClick={handleLogout}
