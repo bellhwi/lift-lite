@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.liftlite.app
+
+# Sitemaps
+Sitemap: https://www.liftlite.app/sitemap.xml

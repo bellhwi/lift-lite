@@ -13,39 +13,79 @@ interface Feature {
   icon: React.ComponentType
 }
 
+// Icons
+const BarbellIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
+  className,
+  ...props
+}) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 -960 960 960'
+    width='24'
+    height='24'
+    className={clsx('h-6 w-6 text-white', className)}
+    fill='currentColor'
+    {...props}
+  >
+    <path d='m536-84-56-56 142-142-340-340-142 142-56-56 56-58-56-56 84-84-56-58 56-56 58 56 84-84 56 56 58-56 56 56-142 142 340 340 142-142 56 56-56 58 56 56-84 84 56 58-56 56-58-56-84 84-56-56-58 56Z' />
+  </svg>
+)
+
+export const EditNoteIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
+  className,
+  ...props
+}) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 -960 960 960'
+    width='24'
+    height='24'
+    fill='currentColor'
+    className={clsx('h-6 w-6 text-white', className)}
+    {...props}
+  >
+    <path d='M160-400v-80h280v80H160Zm0-160v-80h440v80H160Zm0-160v-80h440v80H160Zm360 560v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z' />
+  </svg>
+)
+
+export const ProgressIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
+  className,
+  ...props
+}) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    viewBox='0 -960 960 960'
+    width='24'
+    height='24'
+    fill='currentColor'
+    className={clsx('h-6 w-6 text-white', className)}
+    {...props}
+  >
+    <path d='m140-220-60-60 300-300 160 160 284-320 56 56-340 384-160-160-240 240Z' />
+  </svg>
+)
+
 const features: Array<Feature> = [
   {
     name: 'One',
     summary: 'Pick your lift',
     description: 'Choose from presets like Squat, Bench, Deadlift.',
 
-    icon: () => (
-      <span className='material-symbols-outlined text-white text-[28px]'>
-        fitness_center
-      </span>
-    ),
+    icon: () => <BarbellIcon />,
   },
   {
     name: 'Two',
     summary: 'Log your best set',
     description: 'Weight, reps, note (if you want). Done in seconds.',
 
-    icon: () => (
-      <span className='material-symbols-outlined text-white text-[28px]'>
-        edit_note
-      </span>
-    ),
+    icon: () => <EditNoteIcon />,
   },
   {
     name: 'Three',
     summary: 'Track progress',
     description: 'Get instant feedback with no-nonsense visuals.',
 
-    icon: () => (
-      <span className='material-symbols-outlined text-white text-[28px]'>
-        show_chart
-      </span>
-    ),
+    icon: () => <ProgressIcon />,
   },
 ]
 

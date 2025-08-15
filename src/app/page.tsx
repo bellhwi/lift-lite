@@ -9,6 +9,20 @@ import { SecondaryFeatures } from '@/components/Landing/SecondaryFeatures'
 import FeedbackWidget from '@/components/Landing/FeedbackWidget'
 
 export default function Home() {
+  const siteUrl = 'https://www.liftlite.app'
+
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'LiftLite',
+    url: siteUrl,
+    description:
+      'Free weightlifting training log — no download, no signup. Log in 10 seconds.',
+    applicationCategory: 'FitnessApplication',
+    operatingSystem: 'Web',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  }
+
   return (
     <>
       <Header />
@@ -22,6 +36,10 @@ export default function Home() {
       </main>
       <Footer />
       <FeedbackWidget />
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }}
+      />
     </>
   )
 }
