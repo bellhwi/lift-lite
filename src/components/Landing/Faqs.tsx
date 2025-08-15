@@ -23,7 +23,7 @@ const faqs = [
     {
       question: 'If I upgrade to Plus, can I sync my old logs?',
       answer:
-        'Yup. When you sign in, we’ll ask if you want to sync your local logs to your account. Just confirm, and they’ll be saved to the cloud.',
+        'Yup. When you upgrade it, we’ll automatically sync your local logs to your account.',
     },
     {
       question: 'Is there a lifetime plan?',

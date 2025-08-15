@@ -1,5 +1,6 @@
 import LogForm from '@/components/LogForm'
 import UserBadge from '@/components/UserBadge'
+import FeedbackWidget from '@/components/Landing/FeedbackWidget'
 
 export default function Log() {
   return (
@@ -9,6 +10,7 @@ export default function Log() {
       <div className='max-w-md mx-auto'>
         <LogForm />
       </div>
+      <FeedbackWidget />
     </main>
   )
 }

@@ -1,7 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
-import FeedbackWidget from '@/components/Landing/FeedbackWidget'
 import Script from 'next/script'
 import { Inter, Lexend } from 'next/font/google'
 import clsx from 'clsx'
@@ -63,7 +62,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
 
         {children}
-        <FeedbackWidget />
       </body>
     </html>
   )

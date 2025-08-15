@@ -6,6 +6,7 @@ import { Hero } from '@/components/Landing/Hero'
 import { Pricing } from '@/components/Landing/Pricing'
 import { PrimaryFeatures } from '@/components/Landing/PrimaryFeatures'
 import { SecondaryFeatures } from '@/components/Landing/SecondaryFeatures'
+import FeedbackWidget from '@/components/Landing/FeedbackWidget'
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
         <Faqs />
       </main>
       <Footer />
+      <FeedbackWidget />
     </>
   )
 }
