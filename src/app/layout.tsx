@@ -46,10 +46,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             `,
           }}
         />
-        <link
-          rel='stylesheet'
-          href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap'
-        />
       </head>
       <body className='flex h-full flex-col'>
         <noscript>
