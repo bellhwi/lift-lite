@@ -6,9 +6,9 @@ import { Inter, Lexend } from 'next/font/google'
 import clsx from 'clsx'
 
 export const metadata: Metadata = {
-  title: 'LiftLite',
+  title: 'Weightlifting Training Log Made Simple | LiftLite',
   description:
-    'The dead-simple way to log your lifts. No downloads. No signups. No fluff.',
+    'Free weightlifting training log you can use forever — no download, no signup. Just log in 10 seconds and track your gains.',
 }
 const inter = Inter({
   subsets: ['latin'],
