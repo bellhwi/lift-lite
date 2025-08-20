@@ -1,7 +1,5 @@
 # LiftLite
-
-**Track less. Lift more.**\
-LiftLite is a minimalist workout tracker designed for people who want to log their best sets quickly, without distractions.
+<img width="1418" height="749" alt="Screenshot 2025-08-20 at 8 07 39 AM" src="https://github.com/user-attachments/assets/a8f07810-ee90-41a3-a6e7-4683edf3b668" />
 
 ## Features
 
