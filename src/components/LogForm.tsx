@@ -106,26 +106,7 @@ export default function LogForm() {
       localStorage.setItem(key, JSON.stringify(log))
     }
 
-    // Analyze all previous logs for this lift
-    let isFirst = true
-    let isPR = true
-
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i)
-      if (k?.startsWith('log-') && k.includes(lift) && k !== key) {
-        try {
-          const pastLog = JSON.parse(localStorage.getItem(k) || '{}')
-          if (pastLog.lift === lift) {
-            isFirst = false
-            if (pastLog.weight >= currentWeight) {
-              isPR = false
-            }
-          }
-        } catch {}
-      }
-    }
-
-    sessionStorage.setItem('justSaved', JSON.stringify({ lift, isFirst, isPR }))
+    sessionStorage.setItem('justSaved', JSON.stringify({ lift }))
 
     router.push('/progress')
   }

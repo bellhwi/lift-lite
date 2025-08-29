@@ -23,21 +23,11 @@ export default function ProgressPage() {
 
     if (saved) {
       try {
-        const parsed: { lift: string; isFirst?: boolean; isPR?: boolean } =
-          JSON.parse(saved)
+        const parsed: { lift: string } = JSON.parse(saved)
         setJustSavedLift(parsed.lift)
+        setToast(`✓ ${parsed.lift} saved! Keep it going, ${userName}!`)
 
-        if (parsed.isFirst) {
-          setToast(
-            `👏 Congrats, ${userName}! First ${parsed.lift} on the board!`
-          )
-        } else if (parsed.isPR) {
-          setToast(`🔥 You crushed it, ${userName}! New ${parsed.lift} record!`)
-        } else {
-          setToast(`✓ ${parsed.lift} saved! Keep it going, ${userName}!`)
-        }
-
-        setTimeout(() => setToast(null), 3000)
+        setTimeout(() => setToast(null), 4000)
       } catch {
         setJustSavedLift(null)
       } finally {
