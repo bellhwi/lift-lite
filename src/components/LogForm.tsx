@@ -28,7 +28,7 @@ export default function LogForm() {
   >([])
 
   useEffect(() => {
-    if (!user?.id) return // user.id가 없으면 fetch 안 함
+    if (dbPlan !== 'plus') return // user.id가 없으면 fetch 안 함
     // 초기 Supabase fetch
     const fetchCustomLifts = async () => {
       const { data } = await supabase
