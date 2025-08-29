@@ -28,8 +28,7 @@ export default function LogForm() {
   >([])
 
   useEffect(() => {
-    if (dbPlan !== 'plus') return // user.id가 없으면 fetch 안 함
-    // 초기 Supabase fetch
+    if (dbPlan !== 'plus') return
     const fetchCustomLifts = async () => {
       const { data } = await supabase
         .from('custom_exercises')
@@ -40,7 +39,7 @@ export default function LogForm() {
     }
 
     fetchCustomLifts()
-  }, [user])
+  }, [dbPlan])
 
   useEffect(() => {
     const autoSyncLogs = async () => {
