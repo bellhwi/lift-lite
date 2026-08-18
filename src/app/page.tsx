@@ -9,7 +9,7 @@ import { SecondaryFeatures } from '@/components/Landing/SecondaryFeatures'
 import FeedbackWidget from '@/components/Landing/FeedbackWidget'
 
 export default function Home() {
-  const siteUrl = 'https://www.liftlite.app'
+  const siteUrl = 'https://www.lift-lite.vercel.app'
 
   const ld = {
     '@context': 'https://schema.org',

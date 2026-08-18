@@ -1,4 +1,5 @@
 # LiftLite
+
 <img width="1418" height="749" alt="Screenshot 2025-08-20 at 8 07 39 AM" src="https://github.com/user-attachments/assets/a8f07810-ee90-41a3-a6e7-4683edf3b668" />
 
 ## Features
@@ -36,7 +37,6 @@
 
 Most fitness apps are bloated with features you don't need. LiftLite focuses on speed, simplicity, and clarity—helping you stay consistent without slowing you down. Unlike typical “demo” projects, LiftLite is a fully deployed commercial app with real payment integration and active users.
 
-
 ## Live Demo
 
-[Try LiftLite](https://liftlite.app)
+[Try LiftLite](https://lift-lite.vercel.app)
